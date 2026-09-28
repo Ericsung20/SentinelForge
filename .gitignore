@@ -1,0 +1,61 @@
+# =========================================================
+# Secrets & credentials — NEVER commit these
+# =========================================================
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.crt
+*.cer
+*.csr
+*.p12
+*.pfx
+*.jks
+*.kdbx
+id_rsa*
+id_ed25519*
+
+# Wazuh generated certificates and local-only config
+infrastructure/wazuh/**/certs/
+infrastructure/wazuh/**/*.local.*
+wazuh-certificates/
+authd.pass
+client.keys
+
+# Docker local overrides / persistent volumes
+docker-compose.override.yml
+infrastructure/docker/**/data/
+
+# =========================================================
+# Raw telemetry / large evidence (commit redacted excerpts instead)
+# =========================================================
+*.evtx
+*.pcap
+*.pcapng
+*.dmp
+*.mem
+*.raw
+
+# =========================================================
+# Python
+# =========================================================
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+
+# =========================================================
+# OS / editor
+# =========================================================
+.DS_Store
+Thumbs.db
+desktop.ini
+*.Zone.Identifier
+.vscode/
+.idea/
+*.swp
