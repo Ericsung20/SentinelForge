@@ -1,0 +1,18 @@
+[
+  {
+    "user": "eric",
+    "process": "chrome.exe",
+    "command": "chrome.exe google.com"
+  },
+  {
+    "user": "eric",
+    "process": "powershell.exe",
+    "command": "powershell -enc ABC123"
+  },
+  {
+    "user": "admin",
+    "process": "cmd.exe",
+    "command": "mimikatz.exe"
+  }
+]
+
