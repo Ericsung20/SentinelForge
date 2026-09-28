@@ -25,6 +25,9 @@ client.keys
 
 # Docker local overrides / persistent volumes
 docker-compose.override.yml
+
+# Upstream wazuh-docker clone (not our code; pinned tag noted in docs/setup.md)
+infrastructure/wazuh-docker/
 infrastructure/docker/**/data/
 
 # =========================================================
