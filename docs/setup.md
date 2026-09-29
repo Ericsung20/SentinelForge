@@ -24,7 +24,7 @@ git --version
 Clone:
 
 ```bash
-git clone https://github.com/<your-username>/SentinelForge.git
+git clone https://github.com/Ericsung20/SentinelForge.git
 cd SentinelForge
 ```
 
