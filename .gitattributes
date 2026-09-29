@@ -1,0 +1,16 @@
+# Normalize line endings: the repo is edited from both Windows and WSL.
+* text=auto eol=lf
+
+# Windows-native scripts run on the lab endpoint and need CRLF
+*.ps1 text eol=crlf
+*.psm1 text eol=crlf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Binary evidence and media: never touch line endings or diff as text
+*.evtx binary
+*.pcap binary
+*.pcapng binary
+*.png binary
+*.jpg binary
+*.zip binary
