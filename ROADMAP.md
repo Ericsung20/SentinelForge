@@ -14,13 +14,13 @@ Status legend: **Completed** · **In Progress** · **Planned**
 
 ---
 
-## Phase 1: Infrastructure · Planned
+## Phase 1: Infrastructure · **In Progress**
 
 ```
 Windows → Sysmon → Wazuh Agent → Wazuh
 ```
 
-- [ ] Deploy single-node Wazuh (Manager, Indexer, Dashboard) with Docker → `infrastructure/`
+- [x] Deploy single-node Wazuh (Manager, Indexer, Dashboard) with Docker → `infrastructure/`
 - [ ] Prepare the Windows lab endpoint (a VM with snapshots is preferred)
 - [ ] Install Sysmon with a documented baseline config → `telemetry/sysmon/`
 - [ ] Enable the relevant Windows audit policies → `telemetry/windows-events/`
