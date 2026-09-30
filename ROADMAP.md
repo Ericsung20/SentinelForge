@@ -14,20 +14,21 @@ Status legend: **Completed** · **In Progress** · **Planned**
 
 ---
 
-## Phase 1: Infrastructure · **In Progress**
+## Phase 1: Infrastructure · **Completed**
 
 ```
 Windows → Sysmon → Wazuh Agent → Wazuh
 ```
 
 - [x] Deploy single-node Wazuh (Manager, Indexer, Dashboard) with Docker → `infrastructure/`
-- [ ] Prepare the Windows lab endpoint (a VM with snapshots is preferred)
-- [ ] Install Sysmon with a documented baseline config → `telemetry/sysmon/`
-- [ ] Enable the relevant Windows audit policies → `telemetry/windows-events/`
-- [ ] Install and enroll the Wazuh agent
-- [ ] Document every step in `docs/setup.md`
+- [x] Prepare the Windows lab endpoint (VirtualBox VM with snapshots) → `infrastructure/virtualbox/`
+- [x] Install Sysmon with a documented baseline config → `telemetry/sysmon/`
+- [x] Install and enroll the Wazuh agent → `infrastructure/wazuh/`
+- [x] Document every step in `docs/setup.md`
 
-**Exit criteria:** the agent shows as active in the Wazuh dashboard.
+Moved to Phase 2: enable the relevant Windows audit policies.
+
+**Exit criteria:** the agent shows as active in the Wazuh dashboard. Met on 2026-09-30.
 
 ---
 
@@ -39,7 +40,8 @@ Generate Windows activity → verify Sysmon event → verify ingestion into Wazu
 
 - [ ] Run a benign action (for example, launch `notepad.exe`)
 - [ ] Confirm Sysmon Event ID 1 locally in Event Viewer
-- [ ] Configure the agent to collect `Microsoft-Windows-Sysmon/Operational`
+- [x] Configure the agent to collect `Microsoft-Windows-Sysmon/Operational` (done in Phase 1 via `agent.conf`)
+- [ ] Enable the relevant Windows audit policies → `telemetry/windows-events/`
 - [ ] Find the same event in the Wazuh dashboard
 - [ ] Record the full field mapping (Sysmon field → Wazuh field)
 
