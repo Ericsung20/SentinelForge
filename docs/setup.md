@@ -87,8 +87,9 @@ Create the VM (Windows PowerShell on the host):
 
 ```powershell
 .\infrastructure\virtualbox\New-LabVM.ps1 -IsoPath "$env:USERPROFILE\Downloads\<Win11 eval ISO>.iso"
-& "$env:ProgramFiles\Oracle\VirtualBox\VBoxManage.exe" modifyvm SentinelForge-Win11 --graphicscontroller vmsvga
 ```
+
+The script starts the VM with VMSVGA graphics, ready for installation.
 
 Install Windows:
 
