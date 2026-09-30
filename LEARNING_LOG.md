@@ -34,6 +34,45 @@ A running journal of what I built, what broke and what I learned. Newest entries
 
 ## Entries
 
+### 2026-09-30: Phase 1 complete, agent connected
+
+**Phase:** 1
+
+**What I worked on**
+- Fixed the VM's black screen and finished Windows setup with a local `labuser` account.
+- Installed Guest Additions and took four snapshots along the way (`01-clean-install` to `04-wazuh-agent`).
+- Wrote `Install-Sysmon.ps1` and `Install-WazuhAgent.ps1`, which download, verify and install from a single command on the VM.
+- Installed Sysmon 15.22 and the Wazuh agent 4.14.8. The agent is Active in group `default` and Sysmon alerts arrive in Wazuh.
+- Documented the full Phase 1 setup in `docs/setup.md` and marked Phase 1 complete.
+
+**What I learned**
+- The right VirtualBox graphics controller depended on the install stage under NEM: VMSVGA before Guest Additions, VBoxSVGA after. Each wrong combination gave a black screen while Windows kept running.
+- The Guest Additions log line `graphics: yes` confirms the guest display driver is working.
+- `VBoxManage controlvm keyboardputstring` can type commands into a VM with the shared clipboard off, so isolation doesn't have to be loosened.
+- Verifying downloads with checksums and Authenticode signatures fits in a few lines of PowerShell and stops the install on a mismatch.
+- Wazuh's default group config reached the new agent automatically, so the Sysmon collection needed no endpoint changes.
+- The first Sysmon alerts came from my own install scripts (for example rule 92205, PowerShell creating an executable in the Windows folder). Normal admin work and attacker behavior can look the same, which is why context matters in triage.
+
+**Problems encountered**
+- The VM kept showing a black screen after boot, even with Windows running.
+- Right after first login, Windows was so busy that the VM stopped taking mouse and keyboard input.
+- Setup showed `Something went wrong: OOBESETTINGS`.
+- Windows Terminal (Admin) failed to start PowerShell with error `0xd000003a`.
+
+**How I solved them**
+- Switched graphics to VMSVGA to get the setup screen, then back to VBoxSVGA once Guest Additions were installed.
+- Powered off and booted again, then installed Guest Additions right after login, before background work piled up.
+- Skipped the privacy settings page. The defaults can be changed later in Settings.
+- Opened PowerShell with Win+R → `powershell` → Ctrl+Shift+Enter instead of Terminal.
+
+**Security concepts learned**
+- Verify what you install: a pinned SHA256 for my own config and a publisher signature check (Microsoft, Wazuh, Inc.) for vendor binaries.
+- UAC prompts should be approved by a person, not automated.
+- The lab still uses the public default Wazuh credentials. Changing them is the first task before Phase 2.
+
+**Next step**
+- Change the default Wazuh passwords, then start Phase 2: trace one Sysmon event from the VM to the dashboard.
+
 ### 2026-09-29: Sysmon config, agent config and the Windows lab VM
 
 **Phase:** 1
