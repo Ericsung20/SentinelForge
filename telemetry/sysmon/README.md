@@ -13,16 +13,20 @@ Why this config: rules are grouped and tagged by MITRE ATT&CK technique (`techni
 
 ## Install on the lab endpoint
 
-Run in an elevated PowerShell on the Windows VM, from a folder containing `Sysmon64.exe` ([Sysinternals](https://learn.microsoft.com/sysinternals/downloads/sysmon)) and this config:
+Run in an elevated PowerShell on the Windows VM:
 
 ```powershell
-.\Sysmon64.exe -accepteula -i sysmonconfig.xml
+irm https://raw.githubusercontent.com/Ericsung20/SentinelForge/main/telemetry/sysmon/Install-Sysmon.ps1 -OutFile $env:TEMP\Install-Sysmon.ps1
+powershell -ExecutionPolicy Bypass -File $env:TEMP\Install-Sysmon.ps1
 ```
 
-Update an existing install with a new config:
+[`Install-Sysmon.ps1`](Install-Sysmon.ps1) downloads this config and Sysmon from [Sysinternals](https://learn.microsoft.com/sysinternals/downloads/sysmon), checks the config's SHA256 and Sysmon64.exe's Microsoft signature, then installs Sysmon. If Sysmon is already installed, it only updates the config.
+
+Manual equivalent, from a folder containing `Sysmon64.exe` and this config:
 
 ```powershell
-.\Sysmon64.exe -c sysmonconfig.xml
+.\Sysmon64.exe -accepteula -i sysmonconfig.xml   # install
+.\Sysmon64.exe -c sysmonconfig.xml                # update config
 ```
 
 Events are written to **Applications and Services Logs → Microsoft → Windows → Sysmon → Operational**.
