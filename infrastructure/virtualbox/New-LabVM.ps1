@@ -7,6 +7,11 @@
     Isolation: NAT networking (no inbound access), clipboard and drag-and-drop disabled.
     The VM reaches Wazuh on the host at 10.0.2.2 (VirtualBox NAT gateway).
 
+    With WSL2/Docker running, VirtualBox runs in NEM mode (no direct VT-x). Under NEM:
+    - keep 4 vCPUs; with 2 the VM hung in EFI before reaching the installer
+    - graphics starts as VMSVGA (VBoxSVGA is black before Guest Additions);
+      switch to VBoxSVGA after installing Guest Additions (VMSVGA is black after)
+
 .EXAMPLE
     .\New-LabVM.ps1 -IsoPath "$env:USERPROFILE\Downloads\Win11_Enterprise_Eval.iso"
 #>
@@ -33,7 +38,7 @@ Invoke-VBox createvm --name $Name --ostype Windows11_64 --register
 $cfg = (& $vbox showvminfo $Name --machinereadable | Select-String '^CfgFile=').Line.Split('=', 2)[1].Trim('"')
 $disk = Join-Path (Split-Path $cfg) "$Name.vdi"
 
-Invoke-VBox modifyvm $Name --memory $MemoryMB --cpus $Cpus --vram 128 --graphicscontroller vboxsvga `
+Invoke-VBox modifyvm $Name --memory $MemoryMB --cpus $Cpus --vram 128 --graphicscontroller vmsvga `
     --firmware efi --tpm-type 2.0 --nic1 nat --clipboard-mode disabled --drag-and-drop disabled
 
 # Secure Boot: initialize the UEFI variable store and enroll the default keys
@@ -47,3 +52,4 @@ Invoke-VBox storageattach $Name --storagectl SATA --port 0 --device 0 --type hdd
 Invoke-VBox storageattach $Name --storagectl SATA --port 1 --device 0 --type dvddrive --medium $IsoPath
 
 Write-Host "Created '$Name'. Start it and press a key at 'Press any key to boot from CD or DVD'."
+Write-Host "After installing Guest Additions, power off and run: VBoxManage modifyvm $Name --graphicscontroller vboxsvga"
