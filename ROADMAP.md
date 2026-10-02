@@ -32,7 +32,7 @@ Moved to Phase 2: enable the relevant Windows audit policies.
 
 ---
 
-## Phase 2: First Observable Security Event · Planned
+## Phase 2: First Observable Security Event · **In Progress**
 
 ```
 Generate Windows activity → verify Sysmon event → verify ingestion into Wazuh

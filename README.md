@@ -4,7 +4,7 @@
 
 SentinelForge recreates the full defensive security workflow in a small, controlled lab. It simulates a known adversary technique, observes the telemetry that technique produces on a Windows endpoint, and ships that telemetry to a SIEM. From there it writes detection logic, triages the resulting alert and documents the investigation as an incident report.
 
-> **Status:** Phase 0. The development environment is ready and the repository is scaffolded. No lab components are deployed yet. See [Current Project Status](#current-project-status).
+> **Status:** Phase 1 complete. A Windows 11 lab VM runs Sysmon and a Wazuh agent that ships events to a single-node Wazuh SIEM, and Sysmon alerts are arriving. Next is Phase 2: tracing one event end to end. See [Current Project Status](#current-project-status).
 
 ---
 
@@ -78,8 +78,9 @@ Attack → Telemetry → Detection → Alert → Investigation → Response
 | Linux environment | WSL2 (Ubuntu) | Completed |
 | Containers | Docker Desktop + WSL integration | Completed |
 | Version control | Git / GitHub | Completed |
-| Endpoint telemetry | Sysmon, Windows Event Logs | Planned |
-| SIEM | Wazuh (Manager, Indexer, Dashboard, Agent) | Planned |
+| Lab endpoint | VirtualBox VM, Windows 11 Enterprise Evaluation | Completed |
+| Endpoint telemetry | Sysmon, Windows Event Logs | In Progress (Sysmon done; audit policies in Phase 2) |
+| SIEM | Wazuh 4.14.8 (Manager, Indexer, Dashboard, Agent) | Completed |
 | Detection formats | Wazuh custom rules, Sigma | Planned |
 | Framework | MITRE ATT&CK | Planned |
 | Adversary emulation | Atomic Red Team | Planned |
@@ -92,8 +93,8 @@ Attack → Telemetry → Detection → Alert → Investigation → Response
 | Phase | Name | Status |
 |---|---|---|
 | 0 | Development environment | **Completed** |
-| 1 | Infrastructure (Windows → Sysmon → Wazuh Agent → Wazuh) | Planned |
-| 2 | First observable security event | Planned |
+| 1 | Infrastructure (Windows → Sysmon → Wazuh Agent → Wazuh) | **Completed** |
+| 2 | First observable security event | In Progress |
 | 3 | First detection | Planned |
 | 4 | Detection engineering (5–10 ATT&CK techniques) | Planned |
 | 5 | Investigation | Planned |
@@ -201,9 +202,10 @@ Process: [docs/detection-engineering.md](docs/detection-engineering.md)
 | Windows 11 + WSL2 + Ubuntu | Completed |
 | Docker Desktop with WSL integration | Completed |
 | Git repository and documentation scaffold | Completed |
-| Wazuh stack | Planned |
-| Sysmon on the Windows endpoint | Planned |
-| Wazuh agent and log ingestion | Planned |
+| Wazuh stack (single-node, Docker) | Completed |
+| Windows 11 lab VM with snapshots | Completed |
+| Sysmon on the Windows endpoint | Completed |
+| Wazuh agent and log ingestion | Completed |
 | Atomic Red Team simulations | Planned |
 | Custom detections | Planned (0 / 5) |
 | Investigations and incident reports | Planned (0 / 3) |
