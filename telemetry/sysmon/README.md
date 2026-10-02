@@ -11,6 +11,8 @@
 
 Why this config: rules are grouped and tagged by MITRE ATT&CK technique (`technique_id=...` in each rule name), which makes it easy to trace a Sysmon event back to the behavior it was written to catch. It is actively maintained and ships checksums with each release.
 
+Trade-off: process creation (Event ID 1) uses *include* rules, so only processes matching a technique rule are logged. `whoami.exe` is logged, `notepad.exe` is not. See [field-mapping.md](field-mapping.md) for how a logged event appears in Wazuh.
+
 ## Install on the lab endpoint
 
 Run in an elevated PowerShell on the Windows VM:

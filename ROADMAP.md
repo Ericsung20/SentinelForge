@@ -38,12 +38,13 @@ Moved to Phase 2: enable the relevant Windows audit policies.
 Generate Windows activity → verify Sysmon event → verify ingestion into Wazuh
 ```
 
-- [ ] Run a benign action (for example, launch `notepad.exe`)
+- [x] Run a benign action: `whoami` from `cmd.exe`. Notepad doesn't work here, because the Sysmon config doesn't log its process creation
 - [ ] Confirm Sysmon Event ID 1 locally in Event Viewer
 - [x] Configure the agent to collect `Microsoft-Windows-Sysmon/Operational` (done in Phase 1 via `agent.conf`)
+- [x] Archive all events so non-alert telemetry reaches the dashboard → `infrastructure/wazuh/enable-archives.sh`
 - [ ] Enable the relevant Windows audit policies → `telemetry/windows-events/`
-- [ ] Find the same event in the Wazuh dashboard
-- [ ] Record the full field mapping (Sysmon field → Wazuh field)
+- [x] Find the same event in the Wazuh dashboard (`wazuh-archives-*`)
+- [x] Record the full field mapping (Sysmon field → Wazuh field) → [`telemetry/sysmon/field-mapping.md`](telemetry/sysmon/field-mapping.md)
 
 **Exit criteria:** one event is traced from the endpoint to the dashboard, with screenshots.
 
