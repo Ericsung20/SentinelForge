@@ -1,0 +1,5 @@
+#!/bin/sh
+# Mounted into the manager container at /etc/cont-init.d/ by enable-archives.sh and run on every start.
+# The image restores /etc/filebeat/filebeat.yml from its defaults at startup (PERMANENT_DATA_EXCP),
+# so archive shipping has to be switched on again each time, after 1-config-filebeat and before Filebeat starts.
+sed -i '/archives:/{n;s/enabled: false/enabled: true/}' /etc/filebeat/filebeat.yml
