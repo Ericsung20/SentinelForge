@@ -21,6 +21,14 @@ cmd.exe → whoami.exe
 
 About 22 seconds from process start to the SIEM, mostly the agent's event-channel polling plus the slow NEM-mode VM.
 
+**On the endpoint:** Event Viewer, Sysmon/Operational, logged 10:56:41 AM VM local time (UTC-7):
+
+![Sysmon Event ID 1 for whoami.exe in Event Viewer](../../docs/images/phase2-eventviewer-whoami.png)
+
+**In the SIEM:** Wazuh Discover, `wazuh-archives-*`, the same event at 17:56:41 UTC (`timestamp` shows when Wazuh received it):
+
+![The same event in Wazuh Discover](../../docs/images/phase2-wazuh-whoami.png)
+
 ## Why the default lab setup never showed it
 
 1. **Wazuh only indexes alerts.** Sysmon process creation matches rule 61603, which is level 0, so the event was analyzed and dropped. Fixed by archiving all events ([infrastructure/wazuh/README.md](../../infrastructure/wazuh/README.md#archive-all-events)).

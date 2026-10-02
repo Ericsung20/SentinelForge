@@ -46,7 +46,7 @@ Generate Windows activity → verify Sysmon event → verify ingestion into Wazu
 - [x] Find the same event in the Wazuh dashboard (`wazuh-archives-*`)
 - [x] Record the full field mapping (Sysmon field → Wazuh field) → [`telemetry/sysmon/field-mapping.md`](telemetry/sysmon/field-mapping.md)
 
-**Exit criteria:** one event is traced from the endpoint to the dashboard, with screenshots.
+**Exit criteria:** one event is traced from the endpoint to the dashboard, with screenshots. Met on 2026-10-02, see [`telemetry/sysmon/field-mapping.md`](telemetry/sysmon/field-mapping.md). Remaining before closing the phase: audit policies.
 
 ---
 
