@@ -39,7 +39,7 @@ Generate Windows activity → verify Sysmon event → verify ingestion into Wazu
 ```
 
 - [x] Run a benign action: `whoami` from `cmd.exe`. Notepad doesn't work here, because the Sysmon config doesn't log its process creation
-- [ ] Confirm Sysmon Event ID 1 locally in Event Viewer
+- [x] Confirm Sysmon Event ID 1 locally in Event Viewer (10:56:41 AM VM time = 17:56:41 UTC in Wazuh)
 - [x] Configure the agent to collect `Microsoft-Windows-Sysmon/Operational` (done in Phase 1 via `agent.conf`)
 - [x] Archive all events so non-alert telemetry reaches the dashboard → `infrastructure/wazuh/enable-archives.sh`
 - [ ] Enable the relevant Windows audit policies → `telemetry/windows-events/`
