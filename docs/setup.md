@@ -157,6 +157,7 @@ The first Sysmon alerts came from the install scripts themselves, for example ru
 | `02-guest-additions` | Guest Additions installed, VBoxSVGA |
 | `03-sysmon` | Sysmon installed |
 | `04-wazuh-agent` | Agent enrolled and Active. End of Phase 1 |
+| `05-audit-policy` | Audit policy and PowerShell script block logging ([telemetry/windows-events](../telemetry/windows-events/README.md)). End of Phase 2 |
 
 Restore one with `VBoxManage snapshot SentinelForge-Win11 restore <name>` while the VM is powered off.
 
