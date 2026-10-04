@@ -32,7 +32,7 @@ Moved to Phase 2: enable the relevant Windows audit policies.
 
 ---
 
-## Phase 2: First Observable Security Event · **In Progress**
+## Phase 2: First Observable Security Event · **Completed**
 
 ```
 Generate Windows activity → verify Sysmon event → verify ingestion into Wazuh
@@ -42,11 +42,11 @@ Generate Windows activity → verify Sysmon event → verify ingestion into Wazu
 - [x] Confirm Sysmon Event ID 1 locally in Event Viewer (10:56:41 AM VM time = 17:56:41 UTC in Wazuh)
 - [x] Configure the agent to collect `Microsoft-Windows-Sysmon/Operational` (done in Phase 1 via `agent.conf`)
 - [x] Archive all events so non-alert telemetry reaches the dashboard → `infrastructure/wazuh/enable-archives.sh`
-- [ ] Enable the relevant Windows audit policies → `telemetry/windows-events/`
+- [x] Enable the relevant Windows audit policies and PowerShell script block logging → [`telemetry/windows-events/`](telemetry/windows-events/README.md)
 - [x] Find the same event in the Wazuh dashboard (`wazuh-archives-*`)
 - [x] Record the full field mapping (Sysmon field → Wazuh field) → [`telemetry/sysmon/field-mapping.md`](telemetry/sysmon/field-mapping.md)
 
-**Exit criteria:** one event is traced from the endpoint to the dashboard, with screenshots. Met on 2026-10-02, see [`telemetry/sysmon/field-mapping.md`](telemetry/sysmon/field-mapping.md). Remaining before closing the phase: audit policies.
+**Exit criteria:** one event is traced from the endpoint to the dashboard, with screenshots. Met on 2026-10-02, see [`telemetry/sysmon/field-mapping.md`](telemetry/sysmon/field-mapping.md). Phase closed on 2026-10-03 after audit policies were verified end to end.
 
 ---
 
