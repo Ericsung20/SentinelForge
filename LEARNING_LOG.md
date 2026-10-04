@@ -34,6 +34,51 @@ A running journal of what I built, what broke and what I learned. Newest entries
 
 ## Entries
 
+### 2026-10-02 – 2026-10-03: Phase 2, first event traced end to end
+
+**Phase:** 2
+
+**What I worked on**
+- Updated the README status for Phase 1.
+- Turned on full event archiving in Wazuh (`enable-archives.sh` plus a container start hook) and created the `wazuh-archives-*` index pattern.
+- Traced one Sysmon process-creation event (`whoami` from `cmd.exe`) from Event Viewer on the VM to Wazuh Discover, with screenshots, and wrote a Sysmon → Wazuh field mapping.
+- Enabled eight audit subcategories, command-line capture for 4688 and PowerShell script block logging (`Set-AuditPolicy.ps1`), and added the PowerShell channel to the agent config.
+- Verified that one PowerShell command shows up three times in Wazuh: Security 4688, Sysmon 1 and PowerShell 4104.
+
+**What I learned**
+- A SIEM's defaults decide what you can see. Wazuh indexes only alerts, and Sysmon process creation is a level-0 rule, so ordinary activity is analyzed and then thrown away unless archiving is on.
+- My Sysmon config logs process creation by *include* rules: only processes tied to an ATT&CK technique. `whoami.exe` (T1033) is logged, Notepad isn't. Choosing what to log is a detection-engineering decision, not just a setup step.
+- Windows 11 Notepad reuses a running window, so opening it again creates no new process at all.
+- Wazuh stores paths with doubled backslashes and field values are case-sensitive in DQL. `originalFileName` is a steadier field to search than `image`.
+- The VM shows local time (UTC-7) while Wazuh shows UTC, so matching the same event across tools means converting time zones. GUIDs like `processGuid` are the reliable link.
+- Audit subcategories should be set by GUID, because `auditpol` names are translated on non-English Windows (my host is Korean).
+- Script block logging (4104) records the decoded script, which is what makes it useful against obfuscated PowerShell.
+
+**Problems encountered**
+- `docker compose restart` failed after editing the manager config with `sed -i` ("no such file or directory" on the bind mount).
+- My Filebeat change kept reverting to `archives: enabled: false` after every restart.
+- Searching for Notepad returned nothing, even with archiving on.
+- Commands typed into the VM with `keyboardputstring` lost characters (part of a URL, a closing quote).
+- No 4104 events appeared from the PowerShell window I'd used to apply the policy.
+- The dashboard's password reset failed for `admin` with "Resource 'admin' is reserved".
+
+**How I solved them**
+- `sed -i` replaces the file, so the old bind mount pointed nowhere. Recreating the container (`up -d --force-recreate`) refreshed the mount.
+- Found `/etc/filebeat/filebeat.yml` in the image's `PERMANENT_DATA_EXCP` list, which means it's restored on every start. Fixed it with a cont-init hook that re-enables archives after the image's own setup step.
+- Counted Sysmon event IDs in the archive and read the config's `ProcessCreate` rules, which showed the include-only design. Used `whoami` instead.
+- Typed in 8-character chunks with short pauses, checked a screenshot before pressing Enter, and avoided quotes in test commands.
+- Ran the test in a new `powershell` process, because the logging policy is read when PowerShell starts.
+- Reserved users can only be changed through `internal_users.yml` and `securityadmin.sh`. Password rotation is deferred.
+
+**Security concepts learned**
+- Visibility gaps come from both ends: what the endpoint logs and what the SIEM keeps.
+- Layered telemetry: the same action seen by Security 4688, Sysmon 1 and PowerShell 4104 gives corroboration, and each source has details the others lack.
+- Audit Policy Change (4719) is worth collecting, because turning off logging is a common attacker step.
+- Public default credentials and services listening on all interfaces are still open items in this lab.
+
+**Next step**
+- Phase 3: simulate PowerShell execution (T1059.001), write the first custom Wazuh rule and confirm it fires.
+
 ### 2026-09-30: Phase 1 complete, agent connected
 
 **Phase:** 1
