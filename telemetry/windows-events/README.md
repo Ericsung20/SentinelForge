@@ -34,6 +34,26 @@ powershell -ExecutionPolicy Bypass -File $env:TEMP\Set-AuditPolicy.ps1
 
 The output lists each subcategory with its new setting.
 
+Script block logging only applies to PowerShell processes started **after** the policy is set. A console that was already open keeps logging nothing to 4104.
+
+## Verified on the lab VM (2026-10-03)
+
+One command, run in a new PowerShell process:
+
+```powershell
+powershell -NoProfile -Command Write-Output sentinelforge-4104-new
+```
+
+produced three events in Wazuh (`wazuh-archives-*`), one per log source:
+
+| Channel | Event ID | What it records |
+|---|---|---|
+| Security | 4688 | `powershell.exe -NoProfile -Command ...` with the full command line |
+| Microsoft-Windows-Sysmon/Operational | 1 | The same process, plus hashes, parent process and GUIDs |
+| Microsoft-Windows-PowerShell/Operational | 4104 | The script block that actually ran: `Write-Output sentinelforge-4104-new` |
+
+4104 is the one that survives obfuscation. With `powershell -enc <base64>`, 4688 and Sysmon only show the encoded string, while 4104 shows the decoded script.
+
 ## Collection
 
 The Wazuh agent collects the Security channel by default. The PowerShell channel is added in [`agent.conf`](../../infrastructure/wazuh/shared/default/agent.conf).
