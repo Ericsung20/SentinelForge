@@ -99,7 +99,11 @@ Not yet tested: adding the exclusion with `Add-MpPreference`. That path should a
 
 - Fired: **Yes**, 2026-10-04, on the first test after deployment
 - Removal of the same exclusion 11 seconds earlier stayed at rule 62154, level 5, as expected
-- Evidence: the alert above
+- Evidence: the alert JSON above and the Wazuh Discover view (`wazuh-alerts-*`, `rule.id:100100`; times shown in the host's local time, CDT):
+
+![Alert 100100: source event fields](../docs/images/phase3-alert-100100-event.png)
+
+![Alert 100100: rule fields with MITRE mapping](../docs/images/phase3-alert-100100-rule.png)
 
 ## Tuning Notes
 
