@@ -159,6 +159,7 @@ The first Sysmon alerts came from the install scripts themselves, for example ru
 | `04-wazuh-agent` | Agent enrolled and Active. End of Phase 1 |
 | `05-audit-policy` | Audit policy and PowerShell script block logging ([telemetry/windows-events](../telemetry/windows-events/README.md)). End of Phase 2 |
 | `06-defender-exclusion` | Defender exclusion `C:\AtomicRedTeam` added for Atomic Red Team; the change fires [rule 100100](../detections/defender-exclusion-added.md). End of Phase 3 |
+| `07-atomic-red-team` | Invoke-AtomicRedTeam and atomics installed ([attacks/atomic-red-team](../attacks/atomic-red-team/README.md)). No tests run yet |
 
 Restore one with `VBoxManage snapshot SentinelForge-Win11 restore <name>` while the VM is powered off.
 
