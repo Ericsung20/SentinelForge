@@ -4,7 +4,7 @@
 
 SentinelForge recreates the full defensive security workflow in a small, controlled lab. It simulates a known adversary technique, observes the telemetry that technique produces on a Windows endpoint, and ships that telemetry to a SIEM. From there it writes detection logic, triages the resulting alert and documents the investigation as an incident report.
 
-> **Status:** Phase 2 complete. A Windows 11 lab VM sends Sysmon, Security (audit policy) and PowerShell script block events to a single-node Wazuh SIEM that archives every event. One event has been traced from the endpoint to the dashboard ([field mapping](telemetry/sysmon/field-mapping.md)). Next is Phase 3: the first custom detection. See [Current Project Status](#current-project-status).
+> **Status:** Phase 3 complete. A Windows 11 lab VM sends Sysmon, Security, PowerShell and Defender events to a single-node Wazuh SIEM. The first custom rule, [Defender exclusion added](detections/defender-exclusion-added.md) (T1562.001), closes a gap the built-in rules missed and fires on a documented test. Next is Phase 4: more ATT&CK techniques. See [Current Project Status](#current-project-status).
 
 ---
 
@@ -81,7 +81,7 @@ Attack → Telemetry → Detection → Alert → Investigation → Response
 | Lab endpoint | VirtualBox VM, Windows 11 Enterprise Evaluation | Completed |
 | Endpoint telemetry | Sysmon, Windows Event Logs (audit policy), PowerShell script block logging | Completed |
 | SIEM | Wazuh 4.14.8 (Manager, Indexer, Dashboard, Agent) | Completed |
-| Detection formats | Wazuh custom rules, Sigma | Planned |
+| Detection formats | Wazuh custom rules, Sigma | In Progress (first Wazuh rule; Sigma not started) |
 | Framework | MITRE ATT&CK | Planned |
 | Adversary emulation | Atomic Red Team | Planned |
 | Automation | Python | Planned |
@@ -95,7 +95,7 @@ Attack → Telemetry → Detection → Alert → Investigation → Response
 | 0 | Development environment | **Completed** |
 | 1 | Infrastructure (Windows → Sysmon → Wazuh Agent → Wazuh) | **Completed** |
 | 2 | First observable security event | **Completed** |
-| 3 | First detection | Planned |
+| 3 | First detection | **Completed** |
 | 4 | Detection engineering (5–10 ATT&CK techniques) | Planned |
 | 5 | Investigation | Planned |
 | 6 | Detection tuning | Planned |
@@ -167,6 +167,7 @@ Candidate techniques for the MVP (subject to change as the lab takes shape):
 | T1547.001 | Boot or Logon Autostart Execution: Registry Run Keys | Planned |
 | T1087 | Account Discovery | Planned |
 | T1105 | Ingress Tool Transfer | Planned |
+| T1562.001 | Impair Defenses: Disable or Modify Tools | **Completed**: [Defender exclusion added](detections/defender-exclusion-added.md) (rule 100100) |
 
 ---
 
@@ -209,7 +210,7 @@ Process: [docs/detection-engineering.md](docs/detection-engineering.md)
 | Full event archive and first end-to-end event trace | Completed |
 | Windows audit policy and PowerShell script block logging | Completed |
 | Atomic Red Team simulations | Planned |
-| Custom detections | Planned (0 / 5) |
+| Custom detections | In Progress (1 / 5) |
 | Investigations and incident reports | Planned (0 / 3) |
 | Python automation | Planned |
 
