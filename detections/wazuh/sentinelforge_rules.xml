@@ -19,4 +19,19 @@
     <group>windows,windows_defender,defense_evasion,</group>
   </rule>
 
+  <!-- PowerShell started with a command line that decodes Base64 and runs the result (iex / Invoke-Expression),
+       the fileless pattern behind Poweliks/Powessere-style malware. Built-in rule 67027 rates every 4688 at
+       level 3. Works on the command line alone, so it fires even when Defender blocks the payload. -->
+  <rule id="100110" level="10">
+    <if_sid>67027</if_sid>
+    <field name="win.eventdata.newProcessName" type="pcre2">(?i)\\(powershell|pwsh)\.exe$</field>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)^(?=.*FromBase64String)(?=.*(\biex\b|Invoke-Expression))</field>
+    <description>PowerShell decoded Base64 and executed it in memory (user $(win.eventdata.subjectUserName))</description>
+    <mitre>
+      <id>T1059.001</id>
+      <id>T1027</id>
+    </mitre>
+    <group>windows,powershell,execution,defense_evasion,</group>
+  </rule>
+
 </group>
