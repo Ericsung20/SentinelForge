@@ -66,13 +66,24 @@ Attack → Sysmon Event → Wazuh → Detection → Alert
 
 ---
 
-## Phase 4: Detection Engineering · Planned
+## Phase 4: Detection Engineering · **In Progress**
 
-- [ ] Select 5–10 ATT&CK techniques
+- [x] Select 5–10 ATT&CK techniques (T1562.001, T1059.001, T1053.005, T1547.001, T1087, T1105)
+- [x] Install Atomic Red Team on the lab VM → [`attacks/atomic-red-team/`](attacks/atomic-red-team/README.md)
 - [ ] For each: simulate → inspect telemetry → write the Wazuh rule → write the Sigma equivalent → validate
 - [ ] Maintain a coverage table (technique → rule → status)
 
-**Exit criteria:** at least 5 documented detections with successful alerts (MVP).
+| Technique | Simulation | Rule | Status |
+|---|---|---|---|
+| T1562.001 | Defender exclusion added from Windows Security | [100100](detections/defender-exclusion-added.md) | Fired 2026-10-04 |
+| T1059.001 / T1027 | Atomic T1059.001-10 (Base64 payload run with `iex`) | [100110](detections/powershell-base64-iex.md) | Fired 2026-10-05 |
+| T1053.005 | — | — | Planned |
+| T1547.001 | — | — | Planned |
+| T1087 | — | — | Planned |
+
+Sigma equivalents are not written yet for any rule.
+
+**Exit criteria:** at least 5 documented detections with successful alerts (MVP). Progress: 2 / 5.
 
 ---
 
