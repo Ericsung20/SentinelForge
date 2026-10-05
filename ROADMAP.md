@@ -50,19 +50,19 @@ Generate Windows activity → verify Sysmon event → verify ingestion into Wazu
 
 ---
 
-## Phase 3: First Detection · Planned
+## Phase 3: First Detection · **Completed**
 
 ```
 Attack → Sysmon Event → Wazuh → Detection → Alert
 ```
 
-- [ ] Choose a safe, controlled behavior (for example, an Atomic Red Team PowerShell test for T1059.001)
-- [ ] Run it in the lab and inspect the raw telemetry
-- [ ] Write a Wazuh custom rule → `detections/wazuh/`
-- [ ] Confirm the alert fires
-- [ ] Document the rule using `detections/TEMPLATE.md`
+- [x] Choose a safe, controlled behavior: adding a Defender exclusion (T1562.001). Picked over the planned PowerShell test after it turned out to be invisible to the lab; T1059.001 moves to Phase 4
+- [x] Run it in the lab and inspect the raw telemetry (Defender 5007 → built-in rule 62154, level 5)
+- [x] Write a Wazuh custom rule → [`detections/wazuh/sentinelforge_rules.xml`](detections/wazuh/sentinelforge_rules.xml) (rule 100100)
+- [x] Confirm the alert fires (level 10, 2026-10-04)
+- [x] Document the rule using `detections/TEMPLATE.md` → [`detections/defender-exclusion-added.md`](detections/defender-exclusion-added.md)
 
-**Exit criteria:** one custom rule fires on a documented simulation.
+**Exit criteria:** one custom rule fires on a documented simulation. Met on 2026-10-04.
 
 ---
 
