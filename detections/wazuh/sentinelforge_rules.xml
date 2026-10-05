@@ -1,0 +1,22 @@
+<!--
+  SentinelForge custom detections (rule IDs 100100-100199).
+  Deployed to /var/ossec/etc/rules/ in the manager by detections/wazuh/deploy.sh.
+  Each rule is documented in detections/<name>.md.
+-->
+<group name="sentinelforge,">
+
+  <!-- Defender 5007 is a generic "configuration changed" event. The built-in rule 62154 gives it level 5,
+       the same as Defender's routine internal updates (e.g. CoreService\WdConfigHash), so an attacker's
+       exclusion blends in. Raise it when the new value is an exclusion. Wazuh stores the registry path
+       with escaped backslashes, hence \\+ instead of a single \\. -->
+  <rule id="100100" level="10">
+    <if_sid>62154</if_sid>
+    <field name="win.eventdata.new Value" type="pcre2">(?i)Windows Defender\\+Exclusions\\+(Paths|Extensions|Processes|IpAddresses)\\+</field>
+    <description>Windows Defender exclusion added: $(win.eventdata.new Value)</description>
+    <mitre>
+      <id>T1562.001</id>
+    </mitre>
+    <group>windows,windows_defender,defense_evasion,</group>
+  </rule>
+
+</group>
