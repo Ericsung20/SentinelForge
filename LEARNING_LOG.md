@@ -34,6 +34,48 @@ A running journal of what I built, what broke and what I learned. Newest entries
 
 ## Entries
 
+### 2026-10-05: Phase 4 start, Atomic Red Team and a PowerShell detection
+
+**Phase:** 4
+
+**What I worked on**
+- Installed Atomic Red Team on the lab VM and documented the install (`attacks/atomic-red-team/`). Took snapshot `07-atomic-red-team`.
+- Ran Atomic test T1059.001-10 (PowerShell Fileless Script Execution): a harmless payload stored as Base64 in the registry, then decoded and run with `iex`.
+- Wrote rule 100110 (level 10, T1059.001 + T1027): PowerShell started with a command line that both decodes Base64 and calls `iex`/`Invoke-Expression`. It fired on the first rerun.
+- Checked it against every archived 4688 event for false positives and documented the detection, including what it can't catch.
+- Added a technique coverage table to the roadmap (2 of 5 done).
+
+**What I learned**
+- Read a test before running it. `-ShowDetails` showed exactly what test 10 does and what its cleanup removes, which is how I could tell it was safe.
+- Defender blocked the test by its command line alone (`Trojan:Win32/Powessere.K`). The folder exclusion only covers files in that folder, not command-line or memory scanning.
+- An antivirus block doesn't mean the job is done. A SIEM rule that works on the command line keeps detecting the technique even if the antivirus is missing, disabled or bypassed. Here our rule fired one second before Defender's own alert.
+- The same test run before and after the rule is the clearest proof a rule adds value. Before: rule 67027, level 3, "A process was created". After: rule 100110, level 10, with a meaningful description and MITRE mapping.
+- 4688 with command-line capture (from the Phase 2 audit policy) was the event that made this detection possible. Sysmon did not log this process at all.
+- PCRE2 lookaheads (`^(?=.*A)(?=.*B)`) match "both words, any order" in one field condition.
+- Writing down a rule's known gaps (`-EncodedCommand`, keyword obfuscation, in-session execution) is part of the detection, not an admission of failure.
+
+**Problems encountered**
+- The first install failed: the default execution policy blocked the `powershell-yaml` module.
+- The retry said "already exists ... No changes were made" and installed nothing.
+- `Win+R → powershell → Ctrl+Shift+Enter` opened an elevated Command Prompt instead of PowerShell.
+- The VM froze right after taking a snapshot. The screen and clock stopped and the agent went silent, and the VM log showed a disk controller reset.
+- Piping long output through `Select-Object -First` cut off the deploy script mid-run.
+
+**How I solved them**
+- `Set-ExecutionPolicy Bypass -Scope Process -Force` allows modules for that window only, without changing the machine policy.
+- Reinstalled with `-Force` to replace the half-finished install.
+- Typed `powershell` inside the elevated Command Prompt, which keeps the admin rights.
+- Confirmed the freeze by the agent's last event time in Wazuh, then restored the snapshot I'd just taken and reran the test.
+- Checked the deployed rule file and manager status directly instead of trusting truncated output.
+
+**Security concepts learned**
+- Fileless execution: payloads hidden in the registry and run from memory leave little on disk, so command-line and script-content telemetry matter more than file scanning.
+- Defense in depth: the antivirus and the SIEM caught the same thing independently, and each would cover for the other.
+- Testing a rule needs a negative check too: searching all past events for false positives, not just confirming it fires.
+
+**Next step**
+- Continue Phase 4: scheduled task persistence (T1053.005), registry Run keys (T1547.001) and account discovery (T1087).
+
 ### 2026-10-04: Phase 3, first custom detection
 
 **Phase:** 3
