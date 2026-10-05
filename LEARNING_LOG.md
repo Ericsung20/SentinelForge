@@ -34,6 +34,44 @@ A running journal of what I built, what broke and what I learned. Newest entries
 
 ## Entries
 
+### 2026-10-04: Phase 3, first custom detection
+
+**Phase:** 3
+
+**What I worked on**
+- Added a Defender exclusion for `C:\AtomicRedTeam` on the lab VM, to prepare for Atomic Red Team tests.
+- Found that the change left no trace in Wazuh, then added `Microsoft-Windows-Windows Defender/Operational` to the agent config.
+- Wrote the first custom Wazuh rule (100100, level 10, T1562.001) that flags a Defender exclusion being added, plus a deploy script that validates rules before reloading the manager.
+- Tested it live: adding the exclusion fired the rule, removing it did not.
+- Documented the detection with the template and took VM snapshot `06-defender-exclusion`.
+
+**What I learned**
+- Detection gaps show up when you test, not when you read rule lists. Wazuh has a rule for Defender tampering (92007), but it only looks at PowerShell command lines. A change made in the Windows Security UI goes through Defender's own service and never hits that rule.
+- Defender keeps its own log. Event 5007 records every configuration change with the old and new registry value.
+- Collecting an event is not the same as surfacing it. The built-in rule 62154 gives every 5007 level 5, so an attacker's exclusion sits at the same level as Defender's routine `WdConfigHash` updates.
+- Child rules (`if_sid`) are the clean way to sharpen a built-in rule: keep its decoding and add one more condition.
+- Wazuh field names can contain spaces (`win.eventdata.new Value`), and the registry path is stored with doubled backslashes, so the regex needs `\\+`.
+- An agent only reads a newly added event channel from that point on. Earlier events in the channel are not backfilled.
+- Mapping a rule to a MITRE technique ID is enough. Wazuh fills in the tactic and technique name in the alert.
+
+**Problems encountered**
+- My first Defender exclusion produced nothing in alerts or in the full archive.
+- `wazuh-logtest` printed nothing when I piped a saved event into it.
+- The setup assistant I was working with is not allowed to weaken endpoint security, so it couldn't add the Defender exclusion for me.
+
+**How I solved them**
+- Checked each possible source in turn (command-line rule, Sysmon registry events, Defender log) and found the Defender channel was simply not collected.
+- Tested the rule live instead: removed and re-added the exclusion and checked the alert.
+- Added the exclusion myself in Windows Security, which also became the test case for the rule.
+
+**Security concepts learned**
+- T1562.001 (Impair Defenses): attackers prefer quiet changes like exclusions over turning protection off.
+- Severity matters as much as visibility. An alert at the same level as routine noise is effectively invisible to an analyst.
+- Expected false positives: admins and installers adding exclusions on purpose. In production this needs an allowlist.
+
+**Next step**
+- Phase 4: install Atomic Red Team and work through more techniques, starting with PowerShell (T1059.001).
+
 ### 2026-10-02 – 2026-10-03: Phase 2, first event traced end to end
 
 **Phase:** 2
