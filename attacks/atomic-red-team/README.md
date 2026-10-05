@@ -36,6 +36,6 @@ Invoke-AtomicTest T1059.001 -TestNumbers 10 -Cleanup
 
 | Technique | Test | Why chosen | Detection |
 |---|---|---|---|
-| T1059.001 | 10: PowerShell Fileless Script Execution | Harmless payload (writes a marker file) hidden as Base64 in the registry and run from memory: the case script block logging (4104) exists for | In progress |
+| T1059.001 | 10: PowerShell Fileless Script Execution | Harmless payload (writes a marker file) hidden as Base64 in the registry and run from memory | [Rule 100110](../../detections/powershell-base64-iex.md). Defender blocks the payload (`Trojan:Win32/Powessere.K`); the rule fires on the command line anyway |
 
 Tests skipped on purpose: T1059.001-1 to 4 (Mimikatz, BloodHound) pull in real credential-theft and Active Directory tooling that this single-host lab doesn't need.
