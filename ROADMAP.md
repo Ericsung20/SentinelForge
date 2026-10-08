@@ -77,13 +77,13 @@ Attack → Sysmon Event → Wazuh → Detection → Alert
 |---|---|---|---|
 | T1562.001 | Defender exclusion added from Windows Security | [100100](detections/defender-exclusion-added.md) | Fired 2026-10-04 |
 | T1059.001 / T1027 | Atomic T1059.001-10 (Base64 payload run with `iex`) | [100110](detections/powershell-base64-iex.md) | Fired 2026-10-05 |
-| T1053.005 | — | — | Planned |
+| T1053.005 | Atomic T1053.005-1 (boot and logon tasks running `cmd.exe`) | [100120](detections/scheduled-task-interpreter-persistence.md) | Fired 2026-10-08 |
 | T1547.001 | — | — | Planned |
 | T1087 | — | — | Planned |
 
 Sigma equivalents are not written yet for any rule.
 
-**Exit criteria:** at least 5 documented detections with successful alerts (MVP). Progress: 2 / 5.
+**Exit criteria:** at least 5 documented detections with successful alerts (MVP). Progress: 3 / 5.
 
 ---
 
