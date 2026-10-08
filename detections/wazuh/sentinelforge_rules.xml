@@ -34,4 +34,18 @@
     <group>windows,powershell,execution,defense_evasion,</group>
   </rule>
 
+  <!-- Scheduled task created that runs a script interpreter at boot or logon: classic persistence.
+       Built-in rule 60228 rates every 4698 at level 4. The task XML in taskContent is HTML-escaped
+       (&lt;Command&gt;cmd.exe&lt;/Command&gt;). The pattern avoids & and < so it survives this XML file:
+       ".gt;" and ".lt;" stand for the escaped brackets. -->
+  <rule id="100120" level="10">
+    <if_sid>60228</if_sid>
+    <field name="win.eventdata.taskContent" type="pcre2">(?i)^(?=.*(Boot|Logon)Trigger)(?=.*Command.gt;[^;]*\b(cmd|powershell|pwsh|wscript|cscript|mshta|rundll32|regsvr32)(\.exe)?.lt;/Command)</field>
+    <description>Scheduled task $(win.eventdata.taskName) runs a script interpreter at boot or logon (created by $(win.eventdata.subjectUserName))</description>
+    <mitre>
+      <id>T1053.005</id>
+    </mitre>
+    <group>windows,scheduled_task,persistence,</group>
+  </rule>
+
 </group>
