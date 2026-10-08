@@ -22,7 +22,14 @@ Expected: `Installation of Invoke-AtomicRedTeam is complete.` Atomics land in `C
 
 ## Running a test
 
-Every new PowerShell window needs step 3 again. Read the test before running it:
+Every new elevated PowerShell window needs two lines first. The installer loads the module only into the window it ran in, so elsewhere `Invoke-AtomicTest` is "not recognized" until it is imported:
+
+```powershell
+Set-ExecutionPolicy Bypass -Scope Process -Force
+Import-Module C:\AtomicRedTeam\invoke-atomicredteam\Invoke-AtomicRedTeam.psd1 -Force
+```
+
+Read the test before running it:
 
 ```powershell
 Invoke-AtomicTest T1059.001 -ShowDetailsBrief             # list tests for a technique
