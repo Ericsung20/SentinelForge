@@ -34,6 +34,45 @@ A running journal of what I built, what broke and what I learned. Newest entries
 
 ## Entries
 
+### 2026-10-06 – 2026-10-07: Scheduled task persistence detection
+
+**Phase:** 4
+
+**What I worked on**
+- Stopped a session early when the host battery hit 8%, and shut the VM and Docker down cleanly first.
+- Documented that every new PowerShell window needs the Atomic Red Team module imported.
+- Ran Atomic test T1053.005-1, which creates a logon task and a SYSTEM boot task that both run `cmd.exe /c calc.exe`.
+- Wrote rule 100120 (level 10, T1053.005): a scheduled task with a boot or logon trigger whose command is a script interpreter. Cleaned up, reran the test, and both tasks fired the rule.
+- Detections are now at 3 of 5.
+
+**What I learned**
+- Security 4698 contains the entire task definition as XML: triggers, run-as account and command. That is enough to judge a task without touching the endpoint.
+- `S-1-5-18` in a task's `UserId` is SYSTEM. A boot task as SYSTEM is the strongest persistence a scheduled task can give.
+- Wazuh stores that XML HTML-escaped (`&lt;Command&gt;`). Rule patterns have to match what is stored, not what the original event looked like.
+- `&` and `<` are special inside a Wazuh rule file, so the pattern uses `.` in their place (`.gt;`, `.lt;`) instead of fighting XML escaping.
+- One test ran before the rule existed and one after. Same events, level 4 before and level 10 after, which is the cleanest proof the rule adds value.
+- A false-positive check is only as good as the data behind it. With just two task creations in the archive, I couldn't claim a real FP rate and wrote that down.
+
+**Problems encountered**
+- The VM showed the host laptop's low battery warning, and pressing Enter on it opened Settings instead of reaching PowerShell.
+- A new PowerShell window reported `Invoke-AtomicTest` as not recognized.
+- Typing into the VM from the host was very slow and dropped characters. A OneDrive pop-up also appeared and could have taken the input.
+- My first edit to the rule file was blocked, so the deploy pushed the old file with two rules.
+
+**How I solved them**
+- Shut everything down and continued on another day.
+- Imported the module by path and added it to the Atomic Red Team guide.
+- Typed the test commands directly in the VM, using ↑ to recall and edit previous commands.
+- Checked the rule count on the manager after deploying (2 instead of 3), fixed the edit and redeployed.
+
+**Security concepts learned**
+- T1053.005: scheduled tasks are a top persistence method because they survive reboots and can run as SYSTEM.
+- Detect the combination, not the action. Task creation is normal; a boot or logon trigger plus a script interpreter is what makes it suspicious.
+- Known gaps belong in the rule doc: time-based triggers, tasks that run a dropped `.exe`, and tasks made by editing the registry directly.
+
+**Next step**
+- Continue Phase 4 with registry Run keys (T1547.001) and account discovery (T1087).
+
 ### 2026-10-05: Phase 4 start, Atomic Red Team and a PowerShell detection
 
 **Phase:** 4
