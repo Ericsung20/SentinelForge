@@ -44,5 +44,6 @@ Invoke-AtomicTest T1059.001 -TestNumbers 10 -Cleanup
 | Technique | Test | Why chosen | Detection |
 |---|---|---|---|
 | T1059.001 | 10: PowerShell Fileless Script Execution | Harmless payload (writes a marker file) hidden as Base64 in the registry and run from memory | [Rule 100110](../../detections/powershell-base64-iex.md). Defender blocks the payload (`Trojan:Win32/Powessere.K`); the rule fires on the command line anyway |
+| T1053.005 | 1: Scheduled Task Startup Script | Creates a logon task and a SYSTEM boot task that run `cmd.exe /c calc.exe`: classic persistence with a harmless payload | [Rule 100120](../../detections/scheduled-task-interpreter-persistence.md) |
 
 Tests skipped on purpose: T1059.001-1 to 4 (Mimikatz, BloodHound) pull in real credential-theft and Active Directory tooling that this single-host lab doesn't need.
