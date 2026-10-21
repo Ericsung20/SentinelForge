@@ -48,4 +48,17 @@
     <group>windows,scheduled_task,persistence,</group>
   </rule>
 
+  <!-- Run/RunOnce key written by a script interpreter. Built-in 92300 matches every Run-key write at
+       level 0 and only its child 92302 alerts, and only when the writer is reg.exe. The same value
+       written with PowerShell (Set-ItemProperty) produced no alert at all. -->
+  <rule id="100130" level="10">
+    <if_sid>92300</if_sid>
+    <field name="win.eventdata.image" type="pcre2">(?i)\\(powershell|pwsh|wscript|cscript|mshta|rundll32)\.exe$</field>
+    <description>Run key $(win.eventdata.targetObject) set by script interpreter $(win.eventdata.image): $(win.eventdata.details)</description>
+    <mitre>
+      <id>T1547.001</id>
+    </mitre>
+    <group>windows,registry,persistence,</group>
+  </rule>
+
 </group>
