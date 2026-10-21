@@ -45,5 +45,6 @@ Invoke-AtomicTest T1059.001 -TestNumbers 10 -Cleanup
 |---|---|---|---|
 | T1059.001 | 10: PowerShell Fileless Script Execution | Harmless payload (writes a marker file) hidden as Base64 in the registry and run from memory | [Rule 100110](../../detections/powershell-base64-iex.md). Defender blocks the payload (`Trojan:Win32/Powessere.K`); the rule fires on the command line anyway |
 | T1053.005 | 1: Scheduled Task Startup Script | Creates a logon task and a SYSTEM boot task that run `cmd.exe /c calc.exe`: classic persistence with a harmless payload | [Rule 100120](../../detections/scheduled-task-interpreter-persistence.md) |
+| T1547.001 | 1: Reg Key Run | Adds a Run value with `reg.exe` pointing to a file that doesn't exist. Used as the baseline: built-in rule 92302 catches it | Compared with the same value set from PowerShell, which no built-in rule caught → [Rule 100130](../../detections/run-key-script-interpreter.md) |
 
-Tests skipped on purpose: T1059.001-1 to 4 (Mimikatz, BloodHound) pull in real credential-theft and Active Directory tooling that this single-host lab doesn't need.
+Tests skipped on purpose: T1059.001-1 to 4 (Mimikatz, BloodHound) pull in real credential-theft and Active Directory tooling that this single-host lab doesn't need. T1547.001-3 writes a RunOnce value that downloads and runs a script from GitHub at the next logon; if the VM rebooted before cleanup, uncontrolled code would run, so a local equivalent was used instead. T1547.001-14 and 15 modify Winlogon values and can break logon.
