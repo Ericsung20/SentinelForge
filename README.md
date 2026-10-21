@@ -96,7 +96,7 @@ Attack → Telemetry → Detection → Alert → Investigation → Response
 | 1 | Infrastructure (Windows → Sysmon → Wazuh Agent → Wazuh) | **Completed** |
 | 2 | First observable security event | **Completed** |
 | 3 | First detection | **Completed** |
-| 4 | Detection engineering (5–10 ATT&CK techniques) | In Progress (3 / 5) |
+| 4 | Detection engineering (5–10 ATT&CK techniques) | In Progress (4 / 5) |
 | 5 | Investigation | Planned |
 | 6 | Detection tuning | Planned |
 | 7 | Automation (Python) | Planned |
@@ -164,7 +164,7 @@ Candidate techniques for the MVP (subject to change as the lab takes shape):
 |---|---|---|
 | T1059.001 | Command and Scripting Interpreter: PowerShell | **Completed**: [PowerShell decodes Base64 and executes it](detections/powershell-base64-iex.md) (rule 100110) |
 | T1053.005 | Scheduled Task/Job: Scheduled Task | **Completed**: [Scheduled task runs a script interpreter at boot or logon](detections/scheduled-task-interpreter-persistence.md) (rule 100120) |
-| T1547.001 | Boot or Logon Autostart Execution: Registry Run Keys | Planned |
+| T1547.001 | Boot or Logon Autostart Execution: Registry Run Keys | **Completed**: [Run key set by a script interpreter](detections/run-key-script-interpreter.md) (rule 100130) |
 | T1087 | Account Discovery | Planned |
 | T1105 | Ingress Tool Transfer | Planned |
 | T1562.001 | Impair Defenses: Disable or Modify Tools | **Completed**: [Defender exclusion added](detections/defender-exclusion-added.md) (rule 100100) |
@@ -210,7 +210,7 @@ Process: [docs/detection-engineering.md](docs/detection-engineering.md)
 | Full event archive and first end-to-end event trace | Completed |
 | Windows audit policy and PowerShell script block logging | Completed |
 | Atomic Red Team simulations | Planned |
-| Custom detections | In Progress (3 / 5) |
+| Custom detections | In Progress (4 / 5) |
 | Investigations and incident reports | Planned (0 / 3) |
 | Python automation | Planned |
 
