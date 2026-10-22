@@ -165,7 +165,7 @@ Candidate techniques for the MVP (subject to change as the lab takes shape):
 | T1059.001 | Command and Scripting Interpreter: PowerShell | **Completed**: [PowerShell decodes Base64 and executes it](detections/powershell-base64-iex.md) (rule 100110) |
 | T1053.005 | Scheduled Task/Job: Scheduled Task | **Completed**: [Scheduled task runs a script interpreter at boot or logon](detections/scheduled-task-interpreter-persistence.md) (rule 100120) |
 | T1547.001 | Boot or Logon Autostart Execution: Registry Run Keys | **Completed**: [Run key set by a script interpreter](detections/run-key-script-interpreter.md) (rule 100130) |
-| T1087 | Account Discovery | Planned |
+| T1087.001 | Account Discovery: Local Account | **Completed**: [Account discovery burst](detections/account-discovery-burst.md) (rules 100140 + 100141, correlation) |
 | T1105 | Ingress Tool Transfer | Planned |
 | T1562.001 | Impair Defenses: Disable or Modify Tools | **Completed**: [Defender exclusion added](detections/defender-exclusion-added.md) (rule 100100) |
 
