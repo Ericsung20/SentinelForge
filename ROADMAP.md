@@ -71,7 +71,7 @@ Attack → Sysmon Event → Wazuh → Detection → Alert
 - [x] Select 5–10 ATT&CK techniques (T1562.001, T1059.001, T1053.005, T1547.001, T1087, T1105)
 - [x] Install Atomic Red Team on the lab VM → [`attacks/atomic-red-team/`](attacks/atomic-red-team/README.md)
 - [ ] For each: simulate → inspect telemetry → write the Wazuh rule → write the Sigma equivalent → validate
-- [ ] Maintain a coverage table (technique → rule → status)
+- [x] Maintain a coverage table (technique → rule → status)
 
 | Technique | Simulation | Rule | Status |
 |---|---|---|---|
@@ -79,11 +79,11 @@ Attack → Sysmon Event → Wazuh → Detection → Alert
 | T1059.001 / T1027 | Atomic T1059.001-10 (Base64 payload run with `iex`) | [100110](detections/powershell-base64-iex.md) | Fired 2026-10-05 |
 | T1053.005 | Atomic T1053.005-1 (boot and logon tasks running `cmd.exe`) | [100120](detections/scheduled-task-interpreter-persistence.md) | Fired 2026-10-08 |
 | T1547.001 | Run-key value written with PowerShell (compared with Atomic T1547.001-1 via `reg.exe`) | [100130](detections/run-key-script-interpreter.md) | Fired 2026-10-21 |
-| T1087 | — | — | Planned |
+| T1087.001 | Atomic T1087.001-8 (`net user`, `cmdkey /list`, `net localgroup` in one burst) | [100140 + 100141](detections/account-discovery-burst.md) (correlation) | Fired 2026-10-22 |
 
 Sigma equivalents are not written yet for any rule.
 
-**Exit criteria:** at least 5 documented detections with successful alerts (MVP). Progress: 4 / 5.
+**Exit criteria:** at least 5 documented detections with successful alerts (MVP). **Met on 2026-10-22 (5 / 5).** The phase stays open for Sigma rules and further techniques (T1105).
 
 ---
 
