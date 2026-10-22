@@ -96,7 +96,7 @@ Attack → Telemetry → Detection → Alert → Investigation → Response
 | 1 | Infrastructure (Windows → Sysmon → Wazuh Agent → Wazuh) | **Completed** |
 | 2 | First observable security event | **Completed** |
 | 3 | First detection | **Completed** |
-| 4 | Detection engineering (5–10 ATT&CK techniques) | In Progress (4 / 5) |
+| 4 | Detection engineering (5–10 ATT&CK techniques) | In Progress (MVP 5 / 5 met; Sigma pending) |
 | 5 | Investigation | Planned |
 | 6 | Detection tuning | Planned |
 | 7 | Automation (Python) | Planned |
@@ -210,7 +210,7 @@ Process: [docs/detection-engineering.md](docs/detection-engineering.md)
 | Full event archive and first end-to-end event trace | Completed |
 | Windows audit policy and PowerShell script block logging | Completed |
 | Atomic Red Team simulations | Planned |
-| Custom detections | In Progress (4 / 5) |
+| Custom detections | **5 / 5 (MVP)** |
 | Investigations and incident reports | Planned (0 / 3) |
 | Python automation | Planned |
 
