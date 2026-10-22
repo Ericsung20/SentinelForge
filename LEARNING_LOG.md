@@ -34,6 +34,37 @@ A running journal of what I built, what broke and what I learned. Newest entries
 
 ## Entries
 
+### 2026-10-22: Account discovery correlation, Phase 4 MVP reached
+
+**Phase:** 4
+
+**What I worked on**
+- Ran Atomic T1087.001-8, which runs `net user`, `dir c:\Users\`, `cmdkey /list`, `net localgroup "Users"` and `net localgroup` in about a second.
+- Wrote the lab's first correlation pair: rule 100140 (level 3) tags each account enumeration command, rule 100141 (level 10) fires on 3 or more from the same user within 60 seconds.
+- Reran the test (100141 fired) and replayed the same logic over every Security 4688 event in the archive to check for false positives.
+- Reached the Phase 4 MVP: 5 documented detections, each with a successful alert.
+
+**What I learned**
+- Some techniques can't be detected one event at a time. `net user` alone is routine; what is suspicious is the burst. Wazuh does this with `frequency`, `timeframe` and `if_matched_sid`.
+- The archive already held a real example of the noise: two `net user` runs by the computer account (`DESKTOP-3UDQ08I$`), i.e. Windows itself. A per-command rule would have alerted; the burst rule with `same_field` on the user stayed quiet.
+- Counting has traps. `net user` spawns `net1.exe` with the same arguments, so matching both would double-count. A chained `cmd /c a & b & c` line also matches on its own, so the wrapper adds one to the count. I excluded the first and documented the second.
+- Test frameworks leave their own traces: `Invoke-AtomicTest` runs `whoami` before each test, so plain `whoami` had to stay out of the rule.
+- When the correlation fires, Wazuh reports the event that completed the count as the correlation rule, not as the base rule.
+
+**Problems encountered**
+- Splitting finished work into many small commits meant committing intermediate file states, with the risk of ending up with a different final file.
+
+**How I solved them**
+- Backed up the final files, built each intermediate state with a script that restores the backups on any error, and compared the final files byte for byte after the last commit.
+
+**Security concepts learned**
+- T1087.001: account discovery is usually the first thing done after access, and it uses only built-in tools ("living off the land").
+- Correlation turns weak signals into a strong one: several level 3 events become one level 10 alert.
+- Thresholds are trade-offs. 3 commands in 60 seconds catches scripted recon but misses an attacker who waits between commands.
+
+**Next step**
+- Write Sigma versions of the five detections, then start Phase 5 by investigating these alerts as incidents.
+
 ### 2026-10-21: Run key gap found by changing one variable
 
 **Phase:** 4
