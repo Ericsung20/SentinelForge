@@ -61,4 +61,20 @@
     <group>windows,registry,persistence,</group>
   </rule>
 
+  <!-- Account discovery, two rules. 100140 tags each local account enumeration command (Security 4688);
+       one command alone is routine admin work, so it stays at level 3. 100141 correlates: three or more
+       from the same user within 60 seconds is the post-compromise recon pattern.
+       net1.exe is deliberately not matched: "net user" starts net.exe and then net1.exe, which would
+       count every command twice. Plain "whoami" is excluded too; Invoke-AtomicTest runs it itself. -->
+  <rule id="100140" level="3">
+    <if_sid>67027</if_sid>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)(\bnet\s+(user|localgroup|group|accounts)\b|\bcmdkey(\.exe)?\s+/list|\bquser\b|\bquery\s+user\b|\bwhoami\b.*\s/(all|groups|priv))</field>
+    <description>Account discovery command by $(win.eventdata.subjectUserName): $(win.eventdata.commandLine)</description>
+    <mitre>
+      <id>T1087.001</id>
+    </mitre>
+    <group>windows,discovery,</group>
+  </rule>
+
+
 </group>
