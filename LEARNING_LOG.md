@@ -34,6 +34,36 @@ A running journal of what I built, what broke and what I learned. Newest entries
 
 ## Entries
 
+### 2026-10-21: Run key gap found by changing one variable
+
+**Phase:** 4
+
+**What I worked on**
+- Found an unpushed commit made outside this session that added the untested password rotation script with a Claude co-author line. Undid the commit and kept the file untracked.
+- Ran Atomic T1547.001-1 (Run key via `reg.exe`). Built-in rule 92302 caught it at level 6.
+- Wrote the same Run-key value with PowerShell instead. No alert at all.
+- Wrote rule 100130 (level 10, T1547.001): a Run or RunOnce key set by a script interpreter. Removed and rewrote the value; the rule fired.
+
+**What I learned**
+- Reading the built-in rule chain shows where gaps can hide. 92300 matches every Run-key write at level 0, and only its children alert; 92302 requires the writer to be `reg.exe`.
+- The cleanest way to prove a gap is a controlled experiment: same key, same value, only the writing program changed.
+- A test can be the right technique and still the wrong test. Atomic T1547.001-3 writes a RunOnce value that downloads and runs a script from GitHub at the next logon; if the VM rebooted before cleanup, uncontrolled code would run, and its extra keywords would trip other rules and blur the result.
+- Built-in rules have false positives too: 92041 fired at level 10 for "Base64-like pattern" on `C:\Path\AtomicRedTeam.exe`.
+- Always check for unpushed commits at the start of a session.
+
+**Problems encountered**
+- Commands typed into the VM from the host lost characters, especially quotes.
+
+**How I solved them**
+- Chose a value name without spaces so no quotes were needed, typed in small chunks and waited for the screen to settle before pressing Enter.
+
+**Security concepts learned**
+- T1547.001: Run keys need no admin rights in HKCU, which makes them one of the easiest persistence methods.
+- Attackers use PowerShell far more than `reg.exe`, so a rule tied to one tool covers less than its MITRE label suggests.
+
+**Next step**
+- T1087 account discovery, the last detection for the Phase 4 MVP.
+
 ### 2026-10-06 – 2026-10-07: Scheduled task persistence detection
 
 **Phase:** 4
