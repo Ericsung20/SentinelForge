@@ -4,7 +4,7 @@
 
 SentinelForge recreates the full defensive security workflow in a small, controlled lab. It simulates a known adversary technique, observes the telemetry that technique produces on a Windows endpoint, and ships that telemetry to a SIEM. From there it writes detection logic, triages the resulting alert and documents the investigation as an incident report.
 
-> **Status:** Phase 3 complete. A Windows 11 lab VM sends Sysmon, Security, PowerShell and Defender events to a single-node Wazuh SIEM. The first custom rule, [Defender exclusion added](detections/defender-exclusion-added.md) (T1562.001), closes a gap the built-in rules missed and fires on a documented test. Next is Phase 4: more ATT&CK techniques. See [Current Project Status](#current-project-status).
+> **Status:** Phase 4 MVP reached. A Windows 11 lab VM sends Sysmon, Security, PowerShell and Defender events to a single-node Wazuh SIEM. Five custom detections (six Wazuh rules, including one correlation rule) each close a gap the built-in rules missed and fire on a documented test; see the coverage table in the [roadmap](ROADMAP.md). Next: Sigma versions of the rules, then Phase 5 investigations. See [Current Project Status](#current-project-status).
 
 ---
 
