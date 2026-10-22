@@ -76,5 +76,14 @@
     <group>windows,discovery,</group>
   </rule>
 
+  <rule id="100141" level="10" frequency="3" timeframe="60">
+    <if_matched_sid>100140</if_matched_sid>
+    <same_field>win.eventdata.subjectUserName</same_field>
+    <description>Account discovery burst: 3 or more enumeration commands within 60 seconds by $(win.eventdata.subjectUserName)</description>
+    <mitre>
+      <id>T1087.001</id>
+    </mitre>
+    <group>windows,discovery,</group>
+  </rule>
 
 </group>
