@@ -1,0 +1,37 @@
+title: PowerShell Decodes Base64 and Executes It
+id: a348001c-f1f7-4fa7-af69-2736a6bc0979
+status: experimental
+description: |
+    PowerShell was started with a command line that both decodes Base64 (FromBase64String)
+    and runs the result with Invoke-Expression (iex). This is the fileless loader pattern used by
+    Poweliks/Powessere-style malware, where the payload never touches disk in readable form.
+    Sigma equivalent of SentinelForge Wazuh rule 100110.
+references:
+    - https://attack.mitre.org/techniques/T1059/001/
+    - https://attack.mitre.org/techniques/T1027/
+    - https://github.com/Ericsung20/SentinelForge/blob/main/detections/powershell-base64-iex.md
+author: Ericsung20
+date: 2026-10-23
+tags:
+    - attack.execution
+    - attack.t1059.001
+    - attack.stealth
+    - attack.t1027
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith:
+            - '\powershell.exe'
+            - '\pwsh.exe'
+    selection_decode:
+        CommandLine|contains: 'FromBase64String'
+    selection_exec_name:
+        CommandLine|contains: 'Invoke-Expression'
+    selection_exec_alias:
+        CommandLine|re|i: '\biex\b'
+    condition: selection_img and selection_decode and 1 of selection_exec_*
+falsepositives:
+    - Admin or deployment scripts that pass a Base64 blob to iex on the command line
+level: high
