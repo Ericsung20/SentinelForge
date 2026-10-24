@@ -6,7 +6,7 @@
 | **Status** | Completed |
 | **MITRE ATT&CK Technique** | T1087.001: Account Discovery: Local Account |
 | **Wazuh Rule ID** | 100140 (level 3, per command) and 100141 (level 10, correlation) |
-| **Sigma Rule** | Not written yet |
+| **Sigma Rule** | [`sigma/account_discovery_command.yml`](sigma/account_discovery_command.yml) + [`sigma/account_discovery_burst.yml`](sigma/account_discovery_burst.yml) (correlation) |
 | **Author** | Ericsung20 |
 | **Created / Updated** | 2026-10-22 / 2026-10-22 |
 

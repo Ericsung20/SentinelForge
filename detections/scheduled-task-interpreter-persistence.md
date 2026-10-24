@@ -6,7 +6,7 @@
 | **Status** | Completed |
 | **MITRE ATT&CK Technique** | T1053.005: Scheduled Task/Job: Scheduled Task |
 | **Wazuh Rule ID** | 100120 (level 10), child of built-in 60228 |
-| **Sigma Rule** | Not written yet |
+| **Sigma Rule** | [`sigma/scheduled_task_interpreter_boot_logon.yml`](sigma/scheduled_task_interpreter_boot_logon.yml) |
 | **Author** | Ericsung20 |
 | **Created / Updated** | 2026-10-07 / 2026-10-07 |
 

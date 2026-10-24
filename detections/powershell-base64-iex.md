@@ -6,7 +6,7 @@
 | **Status** | Completed |
 | **MITRE ATT&CK Technique** | T1059.001: PowerShell; T1027: Obfuscated Files or Information |
 | **Wazuh Rule ID** | 100110 (level 10), child of built-in 67027 |
-| **Sigma Rule** | Not written yet |
+| **Sigma Rule** | [`sigma/powershell_base64_iex.yml`](sigma/powershell_base64_iex.yml) |
 | **Author** | Ericsung20 |
 | **Created / Updated** | 2026-10-05 / 2026-10-05 |
 

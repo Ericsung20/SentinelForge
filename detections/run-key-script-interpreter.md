@@ -6,7 +6,7 @@
 | **Status** | Completed |
 | **MITRE ATT&CK Technique** | T1547.001: Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder |
 | **Wazuh Rule ID** | 100130 (level 10), child of built-in 92300 |
-| **Sigma Rule** | Not written yet |
+| **Sigma Rule** | [`sigma/run_key_set_by_script_interpreter.yml`](sigma/run_key_set_by_script_interpreter.yml) |
 | **Author** | Ericsung20 |
 | **Created / Updated** | 2026-10-21 / 2026-10-21 |
 

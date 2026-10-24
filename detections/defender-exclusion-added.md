@@ -6,7 +6,7 @@
 | **Status** | Completed |
 | **MITRE ATT&CK Technique** | T1562.001: Impair Defenses: Disable or Modify Tools |
 | **Wazuh Rule ID** | 100100 (level 10), child of built-in 62154 |
-| **Sigma Rule** | Not written yet |
+| **Sigma Rule** | [`sigma/defender_exclusion_added.yml`](sigma/defender_exclusion_added.yml) (tagged T1685 under ATT&CK v20) |
 | **Author** | Ericsung20 |
 | **Created / Updated** | 2026-10-04 / 2026-10-04 |
 
