@@ -34,6 +34,38 @@ A running journal of what I built, what broke and what I learned. Newest entries
 
 ## Entries
 
+### 2026-10-23: Sigma rules, Phase 4 complete
+
+**Phase:** 4
+
+**What I worked on**
+- Wrote Sigma versions of all six Wazuh rules in `detections/sigma/`, including a Sigma correlation rule for the account discovery burst.
+- Installed `sigma-cli` and the Splunk backend in the repo's virtual environment and pinned the versions in `requirements.txt`.
+- Validated the rules with `sigma check` (0 errors, 0 issues) and converted them to Splunk SPL (`converted/splunk.spl`).
+- Linked each detection doc to its Sigma rule, documented the differences between the Sigma and Wazuh versions, and closed Phase 4.
+
+**What I learned**
+- Sigma describes the original Windows event, not a SIEM's stored copy. The Wazuh rules need workarounds for doubled backslashes and HTML-escaped task XML; the Sigma rules use plain `\` and `<Command>`, and each backend maps field names for its SIEM.
+- Validation tools check more than syntax. `sigma check` downloaded the current MITRE ATT&CK data (v20) and flagged my tags: *Defense Evasion* has been split into **Stealth** and **Defense Impairment**, and *T1562.001 Disable or Modify Tools* is now **T1685**.
+- Different tools can use different ATT&CK versions at the same time. Wazuh 4.14.8 ships older ATT&CK data, so its rule keeps T1562.001 while the Sigma rule uses T1685. Writing that down avoids confusion later.
+- A conversion can change meaning. Wazuh counts the burst over a sliding 60-second window; the Splunk output uses fixed 60-second buckets (`bin _time span=60s`), so a burst crossing a bucket boundary can be missed.
+- Passing `sigma check` and converting cleanly is not the same as working in production. I validated syntax and conversion, not a live Splunk search, and said so.
+
+**Problems encountered**
+- Three ATT&CK tag warnings on the first `sigma check`.
+- The commit script stopped twice on `detections/sigma/.gitkeep`.
+
+**How I solved them**
+- Inspected the ATT&CK data bundled with pySigma to find where the techniques moved, then retagged the Sigma rules.
+- The deletion was already staged with `git rm`, so the path matched nothing for `git add`. Removing it from the script let the first commit include the staged deletion. Neither failed run had committed anything.
+
+**Security concepts learned**
+- Detection-as-code: one portable rule format makes detections reviewable, versioned and reusable across SIEMs.
+- MITRE ATT&CK is a living framework. Mappings in rules and reports need to say which version they follow.
+
+**Next step**
+- Phase 5: treat the lab's alerts as incidents, build timelines from related events and write the first incident report.
+
 ### 2026-10-22: Account discovery correlation, Phase 4 MVP reached
 
 **Phase:** 4
