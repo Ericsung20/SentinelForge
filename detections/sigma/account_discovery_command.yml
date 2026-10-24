@@ -1,0 +1,28 @@
+title: Local Account Discovery Command
+id: 81404d72-c638-434a-bcc2-14e6c9e1fa31
+name: sentinelforge_account_discovery_command
+status: experimental
+description: |
+    A built-in command that enumerates local accounts, groups or saved credentials.
+    One command alone is routine admin work; this rule is the building block for the
+    burst correlation in account_discovery_burst.yml.
+    Sigma equivalent of SentinelForge Wazuh rule 100140.
+references:
+    - https://attack.mitre.org/techniques/T1087/001/
+    - https://github.com/Ericsung20/SentinelForge/blob/main/detections/account-discovery-burst.md
+author: Ericsung20
+date: 2026-10-23
+tags:
+    - attack.discovery
+    - attack.t1087.001
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        CommandLine|re|i: '(\bnet\s+(user|localgroup|group|accounts)\b|\bcmdkey(\.exe)?\s+/list|\bquser\b|\bquery\s+user\b|\bwhoami\b.*\s/(all|groups|priv))'
+    condition: selection
+falsepositives:
+    - Admins troubleshooting accounts and groups
+    - Windows itself (net user run by the computer account)
+level: low
