@@ -1,0 +1,4 @@
+# Tooling used to validate and convert the Sigma rules (pinned to the versions tested on 2026-10-23)
+sigma-cli==3.1.0
+pySigma==1.5.1
+pySigma-backend-splunk==2.1.0
