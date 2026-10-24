@@ -4,7 +4,7 @@
 
 SentinelForge recreates the full defensive security workflow in a small, controlled lab. It simulates a known adversary technique, observes the telemetry that technique produces on a Windows endpoint, and ships that telemetry to a SIEM. From there it writes detection logic, triages the resulting alert and documents the investigation as an incident report.
 
-> **Status:** Phase 4 MVP reached. A Windows 11 lab VM sends Sysmon, Security, PowerShell and Defender events to a single-node Wazuh SIEM. Five custom detections (six Wazuh rules, including one correlation rule) each close a gap the built-in rules missed and fire on a documented test; see the coverage table in the [roadmap](ROADMAP.md). Next: Sigma versions of the rules, then Phase 5 investigations. See [Current Project Status](#current-project-status).
+> **Status:** Phase 4 complete. A Windows 11 lab VM sends Sysmon, Security, PowerShell and Defender events to a single-node Wazuh SIEM. Five custom detections (six Wazuh rules, including one correlation rule) each close a gap the built-in rules missed and fire on a documented test, and each has a validated [Sigma](detections/sigma/README.md) version that converts to Splunk. See the coverage table in the [roadmap](ROADMAP.md). Next: Phase 5, investigating these alerts as incidents. See [Current Project Status](#current-project-status).
 
 ---
 
@@ -81,7 +81,7 @@ Attack → Telemetry → Detection → Alert → Investigation → Response
 | Lab endpoint | VirtualBox VM, Windows 11 Enterprise Evaluation | Completed |
 | Endpoint telemetry | Sysmon, Windows Event Logs (audit policy), PowerShell script block logging | Completed |
 | SIEM | Wazuh 4.14.8 (Manager, Indexer, Dashboard, Agent) | Completed |
-| Detection formats | Wazuh custom rules, Sigma | In Progress (first Wazuh rule; Sigma not started) |
+| Detection formats | Wazuh custom rules, Sigma | Completed (6 Wazuh rules; 6 Sigma rules, converted to Splunk) |
 | Framework | MITRE ATT&CK | Planned |
 | Adversary emulation | Atomic Red Team | Planned |
 | Automation | Python | Planned |
@@ -96,7 +96,7 @@ Attack → Telemetry → Detection → Alert → Investigation → Response
 | 1 | Infrastructure (Windows → Sysmon → Wazuh Agent → Wazuh) | **Completed** |
 | 2 | First observable security event | **Completed** |
 | 3 | First detection | **Completed** |
-| 4 | Detection engineering (5–10 ATT&CK techniques) | In Progress (MVP 5 / 5 met; Sigma pending) |
+| 4 | Detection engineering (5–10 ATT&CK techniques) | **Completed** |
 | 5 | Investigation | Planned |
 | 6 | Detection tuning | Planned |
 | 7 | Automation (Python) | Planned |
