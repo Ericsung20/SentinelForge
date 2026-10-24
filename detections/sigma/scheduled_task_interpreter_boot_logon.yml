@@ -1,0 +1,36 @@
+title: Scheduled Task Runs a Script Interpreter at Boot or Logon
+id: 977f975f-f21f-4fd4-85c3-0fbdccd14ced
+status: experimental
+description: |
+    A scheduled task was created with a boot or logon trigger whose action starts a script
+    interpreter (cmd, PowerShell, wscript, cscript, mshta, rundll32, regsvr32).
+    Task creation alone is routine; this combination is a classic persistence pattern.
+    Sigma equivalent of SentinelForge Wazuh rule 100120.
+references:
+    - https://attack.mitre.org/techniques/T1053/005/
+    - https://github.com/Ericsung20/SentinelForge/blob/main/detections/scheduled-task-interpreter-persistence.md
+author: Ericsung20
+date: 2026-10-23
+tags:
+    - attack.persistence
+    - attack.execution
+    - attack.privilege-escalation
+    - attack.t1053.005
+logsource:
+    product: windows
+    service: security
+    definition: 'Requires audit policy: Object Access > Audit Other Object Access Events'
+detection:
+    selection_event:
+        EventID: 4698
+    selection_trigger:
+        TaskContent|contains:
+            - '<BootTrigger>'
+            - '<LogonTrigger>'
+    selection_command:
+        TaskContent|re|i: '<Command>[^<]*\b(cmd|powershell|pwsh|wscript|cscript|mshta|rundll32|regsvr32)(\.exe)?</Command>'
+    condition: all of selection_*
+falsepositives:
+    - Software that registers a logon task running a .cmd or PowerShell script (backup, VPN, OEM tools)
+    - Admin-made startup scripts
+level: high
