@@ -66,11 +66,11 @@ Attack → Sysmon Event → Wazuh → Detection → Alert
 
 ---
 
-## Phase 4: Detection Engineering · **In Progress**
+## Phase 4: Detection Engineering · **Completed**
 
 - [x] Select 5–10 ATT&CK techniques (T1562.001, T1059.001, T1053.005, T1547.001, T1087, T1105)
 - [x] Install Atomic Red Team on the lab VM → [`attacks/atomic-red-team/`](attacks/atomic-red-team/README.md)
-- [ ] For each: simulate → inspect telemetry → write the Wazuh rule → write the Sigma equivalent → validate
+- [x] For each: simulate → inspect telemetry → write the Wazuh rule → write the Sigma equivalent → validate (Wazuh rules tested live; Sigma rules pass `sigma check` and convert to Splunk, see [`detections/sigma/`](detections/sigma/README.md))
 - [x] Maintain a coverage table (technique → rule → status)
 
 | Technique | Simulation | Rule | Status |
@@ -81,9 +81,9 @@ Attack → Sysmon Event → Wazuh → Detection → Alert
 | T1547.001 | Run-key value written with PowerShell (compared with Atomic T1547.001-1 via `reg.exe`) | [100130](detections/run-key-script-interpreter.md) | Fired 2026-10-21 |
 | T1087.001 | Atomic T1087.001-8 (`net user`, `cmdkey /list`, `net localgroup` in one burst) | [100140 + 100141](detections/account-discovery-burst.md) (correlation) | Fired 2026-10-22 |
 
-Sigma equivalents are not written yet for any rule.
+Sigma equivalents for all six rules were added on 2026-10-23 and validated with `sigma check` (0 errors, 0 issues). Under ATT&CK v20 the Defender exclusion maps to T1685 (Defense Impairment); the Wazuh rule keeps T1562.001 because Wazuh ships older ATT&CK data.
 
-**Exit criteria:** at least 5 documented detections with successful alerts (MVP). **Met on 2026-10-22 (5 / 5).** The phase stays open for Sigma rules and further techniques (T1105).
+**Exit criteria:** at least 5 documented detections with successful alerts (MVP). **Met on 2026-10-22 (5 / 5).** Phase closed on 2026-10-23 with the Sigma rules. T1105 (Ingress Tool Transfer) was selected but not built; it moves to the backlog.
 
 ---
 
