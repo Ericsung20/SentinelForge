@@ -1,0 +1,36 @@
+title: Run Key Set by a Script Interpreter
+id: 7759b846-e1ef-468f-9684-2f2d91915187
+status: experimental
+description: |
+    A value under CurrentVersion\Run or RunOnce was set by a script interpreter
+    (PowerShell, wscript, cscript, mshta, rundll32). Covers the PowerShell route
+    (Set-ItemProperty), which built-in rules keyed on reg.exe miss.
+    Sigma equivalent of SentinelForge Wazuh rule 100130.
+references:
+    - https://attack.mitre.org/techniques/T1547/001/
+    - https://github.com/Ericsung20/SentinelForge/blob/main/detections/run-key-script-interpreter.md
+author: Ericsung20
+date: 2026-10-23
+tags:
+    - attack.persistence
+    - attack.privilege-escalation
+    - attack.t1547.001
+logsource:
+    category: registry_set
+    product: windows
+detection:
+    selection_key:
+        TargetObject|contains: '\Software\Microsoft\Windows\CurrentVersion\Run'
+    selection_writer:
+        Image|endswith:
+            - '\powershell.exe'
+            - '\pwsh.exe'
+            - '\wscript.exe'
+            - '\cscript.exe'
+            - '\mshta.exe'
+            - '\rundll32.exe'
+    condition: all of selection_*
+falsepositives:
+    - Admin or deployment scripts that register startup programs with PowerShell
+    - Installers that use script hosts to write their own Run entries
+level: high
