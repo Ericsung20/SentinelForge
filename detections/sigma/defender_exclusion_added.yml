@@ -1,0 +1,32 @@
+title: Windows Defender Exclusion Added
+id: 0c05c1bc-517b-46ec-8323-6cc0fd4800dd
+status: experimental
+description: |
+    A path, extension, process or IP exclusion was added to Microsoft Defender Antivirus.
+    Attackers add exclusions to drop and run tools without being scanned.
+    Catches changes made from the Windows Security UI as well as from PowerShell or the registry.
+    Sigma equivalent of SentinelForge Wazuh rule 100100.
+references:
+    - https://attack.mitre.org/techniques/T1685/
+    - https://github.com/Ericsung20/SentinelForge/blob/main/detections/defender-exclusion-added.md
+author: Ericsung20
+date: 2026-10-23
+tags:
+    - attack.defense-impairment
+    - attack.t1685
+logsource:
+    product: windows
+    service: windefend
+detection:
+    selection:
+        EventID: 5007
+        NewValue|contains:
+            - '\Windows Defender\Exclusions\Paths\'
+            - '\Windows Defender\Exclusions\Extensions\'
+            - '\Windows Defender\Exclusions\Processes\'
+            - '\Windows Defender\Exclusions\IpAddresses\'
+    condition: selection
+falsepositives:
+    - Administrators adding exclusions on purpose (build folders, databases, backup software)
+    - Software installers that add their own exclusions
+level: high
