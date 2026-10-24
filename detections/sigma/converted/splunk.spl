@@ -1,0 +1,19 @@
+TargetObject="*\\Software\\Microsoft\\Windows\\CurrentVersion\\Run*" Image IN ("*\\powershell.exe", "*\\pwsh.exe", "*\\wscript.exe", "*\\cscript.exe", "*\\mshta.exe", "*\\rundll32.exe")
+
+source="WinEventLog:Microsoft-Windows-Windows Defender/Operational" EventCode=5007 NewValue IN ("*\\Windows Defender\\Exclusions\\Paths\\*", "*\\Windows Defender\\Exclusions\\Extensions\\*", "*\\Windows Defender\\Exclusions\\Processes\\*", "*\\Windows Defender\\Exclusions\\IpAddresses\\*")
+
+
+| rex field=CommandLine "(?<CommandLineMatch>(?i)\\biex\\b)"
+| eval CommandLineCondition=if(isnotnull(CommandLineMatch), "true", "false")
+| search Image IN ("*\\powershell.exe", "*\\pwsh.exe") CommandLine="*FromBase64String*" CommandLine="*Invoke-Expression*" OR CommandLineCondition="true"
+
+source="WinEventLog:Security" EventCode=4698 TaskContent IN ("*<BootTrigger>*", "*<LogonTrigger>*")
+| regex TaskContent="(?i)<Command>[^<]*\\b(cmd|powershell|pwsh|wscript|cscript|mshta|rundll32|regsvr32)(\\.exe)?</Command>"
+
+*
+| regex CommandLine="(?i)(\\bnet\\s+(user|localgroup|group|accounts)\\b|\\bcmdkey(\\.exe)?\\s+/list|\\bquser\\b|\\bquery\\s+user\\b|\\bwhoami\\b.*\\s/(all|groups|priv))"
+
+| bin _time span=60s
+| stats count as event_count by _time User
+
+| search event_count >= 3
