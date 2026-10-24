@@ -1,0 +1,27 @@
+title: Local Account Discovery Burst
+id: 8ae6bf59-4a70-428d-a544-5efef7c2e9da
+status: experimental
+description: |
+    Three or more local account discovery commands by the same user within 60 seconds:
+    the scripted recon pattern seen right after initial access.
+    Sigma equivalent of SentinelForge Wazuh rule 100141.
+references:
+    - https://attack.mitre.org/techniques/T1087/001/
+    - https://github.com/Ericsung20/SentinelForge/blob/main/detections/account-discovery-burst.md
+author: Ericsung20
+date: 2026-10-23
+tags:
+    - attack.discovery
+    - attack.t1087.001
+correlation:
+    type: event_count
+    rules:
+        - sentinelforge_account_discovery_command
+    group-by:
+        - User
+    timespan: 60s
+    condition:
+        gte: 3
+falsepositives:
+    - Inventory or IT-management scripts that enumerate local groups
+level: high
