@@ -96,10 +96,10 @@ Sigma equivalents for all six rules were added on 2026-10-23 and validated with 
 | Report | Scenario | Verdict | Date |
 |---|---|---|---|
 | [INC-001](investigations/INC-001/README.md) | Multi-stage PowerShell intrusion (discovery → encoded execution → dual persistence) | True positive | 2026-10-26 |
-| INC-002 | planned (Defender exclusion then execution) | — | — |
-| INC-003 | planned (SYSTEM `net user`) | expected benign / false positive | — |
+| [INC-002](investigations/INC-002/README.md) | `net user` run by the Wazuh agent as SYSTEM | Benign (false positive) | 2026-10-26 |
+| INC-003 | planned | — | — |
 
-**Exit criteria:** 3 investigations and 3 incident reports (MVP). Progress: 1 / 3.
+**Exit criteria:** 3 investigations and 3 incident reports (MVP). Progress: 2 / 3.
 
 ---
 
