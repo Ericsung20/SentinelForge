@@ -87,13 +87,19 @@ Sigma equivalents for all six rules were added on 2026-10-23 and validated with 
 
 ---
 
-## Phase 5: Investigation · Planned
+## Phase 5: Investigation · **In Progress**
 
-- [ ] Treat alerts as real incidents
-- [ ] Build timelines from related Sysmon events (process tree, network, file, registry)
-- [ ] Write incident reports using `investigations/_TEMPLATE/`
+- [x] Treat alerts as real incidents
+- [x] Build timelines from related Sysmon events (process tree, network, file, registry)
+- [x] Write incident reports using `investigations/_TEMPLATE/`
 
-**Exit criteria:** 3 investigations and 3 incident reports (MVP).
+| Report | Scenario | Verdict | Date |
+|---|---|---|---|
+| [INC-001](investigations/INC-001/README.md) | Multi-stage PowerShell intrusion (discovery → encoded execution → dual persistence) | True positive | 2026-10-26 |
+| INC-002 | planned (Defender exclusion then execution) | — | — |
+| INC-003 | planned (SYSTEM `net user`) | expected benign / false positive | — |
+
+**Exit criteria:** 3 investigations and 3 incident reports (MVP). Progress: 1 / 3.
 
 ---
 
