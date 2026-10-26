@@ -1,0 +1,15 @@
+﻿=== 100140 alerts by a computer account (SYSTEM) ===
+  2026-10-26T17:50:36.594+0000 | DESKTOP-3UDQ08I$ | net user
+  2026-10-26T17:50:36.646+0000 | DESKTOP-3UDQ08I$ | net user
+count: 2
+
+=== one SYSTEM 'net user' 4688 ===
+timestamp: 2026-10-26T17:50:36.594+0000
+   subjectUserName = DESKTOP-3UDQ08I$
+   subjectUserSid = S-1-5-18
+   newProcessName = C:\\Windows\\SysWOW64\\net.exe
+   commandLine = net user
+   parentProcessName = C:\\Program Files (x86)\\ossec-agent\\wazuh-agent.exe
+   tokenElevationType = %%1936
+   mandatoryLabel = S-1-16-16384
+  eventRecordID: 11511
