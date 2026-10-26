@@ -1,0 +1,19 @@
+﻿17:55:03.257 | 4104 pid  ppid  | scriptblock <=  | prompt
+17:55:33.141 | 4104 pid  ppid  | scriptblock <=  | powershell -ExecutionPolicy Bypass -File $env:TEMP\\s.ps1
+17:55:34.407 | PROC pid 5656 ppid 4676 | powershell.exe <= powershell.exe | \"C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" -ExecutionPolicy Bypass -Fil
+17:55:39.877 | 4104 pid  ppid  | scriptblock <=  | #Requires -RunAsAdministrator &lt;# .SYNOPSIS     SentinelForge lab scenario for investigation 
+17:55:42.451 | PROC pid 1616 ppid 5656 | cmd.exe <= powershell.exe | \"C:\\WINDOWS\\system32\\cmd.exe\" /c \"net user &amp; net localgroup Administrators &amp; cmdk
+17:55:42.458 | PROC pid 1772 ppid 1616 | net.exe <= cmd.exe | net  user
+17:55:42.476 | PROC pid 5508 ppid 1616 | net.exe <= cmd.exe | net  localgroup Administrators
+17:55:43.668 | PROC pid 8992 ppid 1616 | cmdkey.exe <= cmd.exe | cmdkey.exe  /list
+17:55:45.242 | PROC pid 6352 ppid 5656 | powershell.exe <= powershell.exe | \"C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" -NoProfile -EncodedCommand U
+17:55:50.783 | 4104 pid  ppid  | scriptblock <=  | Set-Content -Path 'C:\\Users\\labuser\\AppData\\Local\\Temp\\SF-INC-001.txt' -Value 'benign lab
+17:55:50.791 | 4104 pid  ppid  | scriptblock <=  | $global:?
+17:55:55.049 | REG pid  ppid  | regset <= powershell.exe | HKU\\S-1-5-21-1615828557-3750314984-1769548580-1001\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\SF-INC-001 = C:\\ProgramData\\SF-INC-001\\does-not-exist.exe
+17:56:18.179 | PROC pid 5516 ppid 5656 | schtasks.exe <= powershell.exe | \"C:\\WINDOWS\\system32\\schtasks.exe\" /create /tn SF-INC-001 /sc onlogon /tr \"cmd.exe /c C:\
+18:10:48.176 | 4104 pid  ppid  | scriptblock <=  | $global:?
+18:10:52.129 | REG pid  ppid  | regset <= svchost.exe | HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Schedule\\TaskCache\\Tree\\SF-INC-001\\SD = Binary Data
+18:10:52.979 | REG pid  ppid  | regset <= svchost.exe | HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Schedule\\TaskCache\\Tree\\SF-INC-001\\Id = {D21E3FA0-E455-438F-9137-729A507CC4BB}
+18:10:53.298 | REG pid  ppid  | regset <= svchost.exe | HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Schedule\\TaskCache\\Tree\\SF-INC-001\\Index = DWORD (0x00000002)
+18:10:53.680 | FILE pid  ppid  | filecreate <= svchost.exe | C:\\Windows\\System32\\Tasks\\SF-INC-001
+18:10:54.633 | 4104 pid  ppid  | scriptblock <=  | prompt
