@@ -71,3 +71,60 @@ Full export: [`evidence/scheduled-task-creation.txt`](evidence/scheduled-task-cr
 
 - `evidence/scheduled-task-creation.txt`: the 4698 alert, decoded task XML, the elevated 4688 creation chain, and the Sysmon file-create events.
 - `screenshots/`: Wazuh dashboard capture of alert 100120 (optional).
+
+## Analyst Assessment
+
+**True positive.** The evidence shows a classic persistence install:
+
+1. **Persistence intent.** The task fires on a `LogonTrigger`, so it re-executes the payload every
+   time the user logs on — the defining characteristic of T1053.005, not a one-off action.
+2. **Interpreter payload.** The action launches `powershell.exe -ExecutionPolicy Bypass -WindowStyle
+   Hidden` against a dropped script — bypassing policy and hiding the window, both attacker hallmarks.
+3. **Administrative context.** Creation succeeded only from a Full (elevated) token; non-elevated
+   attempts were denied. An intruder reaching this point already holds admin on the host.
+
+The chain is intact end to end: dropped payload → elevated `powershell` → `schtasks /create` →
+Schedule service registers the task on disk → 4698 → alert. Nothing about it resembles routine admin
+housekeeping (see below).
+
+## False Positive Considerations
+
+Legitimate software and administrators do create logon-triggered tasks (updaters, agent bootstraps,
+login scripts). What rules that out here:
+
+- **Author and location.** The task was authored interactively by `labuser` and runs a script from
+  `C:\ProgramData\SF-INC-003\`, not a vendor install path. A legitimate installer runs as SYSTEM or a
+  service account via an MSI, not from an ad-hoc admin console.
+- **Payload shape.** `-ExecutionPolicy Bypass -WindowStyle Hidden -File <dropped script>` is the
+  signature of hands-on-keyboard persistence, not a signed updater.
+- **No change ticket / known software.** There is no corresponding install event or known-good task
+  name. Contrast with INC-002, where the subject SID (SYSTEM) and parent (`wazuh-agent.exe`) explained
+  the activity; here the context *confirms* rather than exonerates.
+
+If a specific legitimate logon task were expected, the right tuning is an allowlist of known task
+names / authors, not suppressing 100120 wholesale.
+
+## Recommended Response
+
+- **Containment:** disable the task immediately — `schtasks /change /tn SF-INC-003 /disable` (or
+  `Disable-ScheduledTask`), and isolate the host if other indicators exist.
+- **Eradication:** delete the task and the staged payload — run
+  [`attacks/attack-scenarios/INC-003-cleanup.ps1`](../../attacks/attack-scenarios/INC-003-cleanup.ps1)
+  (removes `\SF-INC-003`, `C:\ProgramData\SF-INC-003\`, and the marker file).
+- **Recovery:** confirm no logon has executed the payload (check for the marker / `payload.ps1`
+  output) and review how the admin token was obtained.
+- **Detection improvement:** 100120 already covers boot/logon tasks launching interpreters. Consider a
+  companion rule for `schtasks /create` seen directly in 4688 command lines, to catch creation even
+  when 4698 auditing is disabled.
+
+## Lessons Learned
+
+- The task-creation event (4698) carries the **full task XML**, so the trigger, the exact action, and
+  the principal are all available from a single event — no need to pull the task file off the host.
+- **Token elevation type is decisive.** `%%1937` (Full) vs `%%1938` (Limited) separated the real,
+  successful install from the earlier failed non-elevated attempts, and confirms the attacker held admin.
+- Detecting on **task creation** beats detecting on execution: the alert fires the moment persistence
+  is planted, long before the next logon would run the payload.
+- Contrast across the three Phase 5 cases: INC-001 (multi-stage, true positive), INC-002 (SYSTEM
+  inventory, benign false positive), INC-003 (single-technique persistence, true positive) — the same
+  rule family reads very differently depending on subject SID, parent process, and elevation.
