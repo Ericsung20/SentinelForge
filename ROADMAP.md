@@ -87,7 +87,7 @@ Sigma equivalents for all six rules were added on 2026-10-23 and validated with 
 
 ---
 
-## Phase 5: Investigation · **In Progress**
+## Phase 5: Investigation · **Completed**
 
 - [x] Treat alerts as real incidents
 - [x] Build timelines from related Sysmon events (process tree, network, file, registry)
@@ -97,9 +97,9 @@ Sigma equivalents for all six rules were added on 2026-10-23 and validated with 
 |---|---|---|---|
 | [INC-001](investigations/INC-001/README.md) | Multi-stage PowerShell intrusion (discovery → encoded execution → dual persistence) | True positive | 2026-10-26 |
 | [INC-002](investigations/INC-002/README.md) | `net user` run by the Wazuh agent as SYSTEM | Benign (false positive) | 2026-10-26 |
-| INC-003 | planned | — | — |
+| [INC-003](investigations/INC-003/README.md) | Scheduled task created to run PowerShell at every logon (persistence) | True positive | 2026-10-28 |
 
-**Exit criteria:** 3 investigations and 3 incident reports (MVP). Progress: 2 / 3.
+**Exit criteria:** 3 investigations and 3 incident reports (MVP). **Met on 2026-10-28 (3 / 3).**
 
 ---
 
