@@ -1,0 +1,35 @@
+INC-003 evidence: scheduled-task logon persistence
+Source: Wazuh alerts.json (rule 100120) + archives.json (Security 4688, Sysmon 11)
+Agent 001 (DESKTOP-3UDQ08I). All times UTC.
+
+== Alert (rule 100120, level 10) ==
+2026-10-28T06:59:51.830Z  Security 4698  EventRecordID 13813
+  taskName         : \SF-INC-003
+  subjectUserName  : labuser
+  subjectUserSid   : S-1-5-21-...-1001
+  creating service : processID 928 (Schedule service, svchost.exe)
+
+== Scheduled task definition (decoded from 4698 taskContent) ==
+  Author    : DESKTOP-3UDQ08I\labuser
+  Trigger   : LogonTrigger  (fires at every logon), Enabled=true
+  Action    : powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -File C:\ProgramData\SF-INC-003\payload.ps1
+  Principal : DESKTOP-3UDQ08I\labuser, LogonType=InteractiveToken, RunLevel=LeastPrivilege
+
+== Creating process chain (Security 4688, the elevated run) ==
+  06:59:44.257Z  powershell.exe   -ExecutionPolicy Bypass -File C:\Users\labuser\AppData\Local\Temp\INC-003-persistence.ps1
+                 parent: powershell.exe (interactive admin console)   elevation: %%1937 (Full / elevated)
+  06:59:50.746Z  schtasks.exe     /create /tn SF-INC-003 /sc onlogon /tr "powershell.exe -ExecutionPolicy Bypass ... -File C:\ProgramData\SF-INC-003\payload.ps1" /f
+                 parent: powershell.exe   elevation: %%1937 (Full / elevated)
+  06:59:51.770Z  Sysmon EID 11    svchost.exe -> C:\Windows\System32\Tasks\SF-INC-003  (task registered on disk)
+  06:59:51.830Z  Security 4698    rule 100120 fires (level 10)
+
+== Payload staged on disk ==
+  06:09:55.840Z  Sysmon EID 11    powershell.exe -> C:\ProgramData\SF-INC-003\payload.ps1
+  payload content: Set-Content -Path '%TEMP%\SF-INC-003.txt' -Value 'benign lab marker SF-INC-003'
+
+== Privilege note (why this is unambiguously an admin action) ==
+  Earlier creation attempts from a non-elevated token (elevation %%1938 = Limited / UAC-filtered,
+  parent VBoxService.exe) failed with "Access is denied". The task was created only once a Full
+  (elevated, %%1937) token was used. Scheduled-task persistence of this form requires admin rights.
+
+  Elevation type codes: %%1937 = TokenElevationTypeFull (elevated), %%1938 = TokenElevationTypeLimited (filtered).
