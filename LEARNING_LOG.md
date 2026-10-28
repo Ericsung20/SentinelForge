@@ -34,6 +34,59 @@ A running journal of what I built, what broke and what I learned. Newest entries
 
 ## Entries
 
+### 2026-10-28: Phase 5 investigations (INC-001, INC-002, INC-003)
+
+**Phase:** 5
+
+**What I worked on**
+- Ran three incidents end to end, treating my own Phase 4 alerts as real cases: INC-001 (multi-stage
+  PowerShell intrusion, true positive), INC-002 (`net user` by the Wazuh agent as SYSTEM, benign false
+  positive) and INC-003 (scheduled-task logon persistence, true positive).
+- For each: a benign scenario script, a pre-run snapshot, an analyst investigation from the alert back
+  to the root cause, an incident report using `investigations/_TEMPLATE/`, and cleanup.
+
+**What I learned**
+- A repeatable investigation loop: start from the highest-severity alert, pivot to the root process
+  through the parent-PID chain, then rebuild the timeline from the surrounding Sysmon/Security events.
+- The same signal reads completely differently depending on context. `net user` is benign when the
+  subject is SYSTEM (`S-1-5-18`) with parent `wazuh-agent.exe` (INC-002), but a scheduled task launching
+  `powershell -ExecutionPolicy Bypass -WindowStyle Hidden` is persistence (INC-003). Subject SID,
+  parent process and token elevation are what settle "attacker or not".
+- PowerShell 4104 script-block logging defeats `-EncodedCommand`; the 4698 task-creation event carries
+  the full task XML, so the trigger and action are visible without touching the host.
+- Correlation design paid off: the per-user burst rule (100141) did not escalate SYSTEM's two `net user`
+  events, so the noisy base rule stays quiet where it should.
+
+**Problems encountered**
+- `VBoxManage guestcontrol` runs processes in session 0 with a UAC-filtered token, so `schtasks /create`
+  and `Register-ScheduledTask` both failed with "Access is denied". The policy knob that would fix it
+  (`LocalAccountTokenFilterPolicy`) itself needs admin — a chicken-and-egg.
+- Passing commands as `wsl.exe ... bash -lc '...'` or `guestcontrol run ... -Command "..."` through
+  PowerShell kept eating `$variables` and breaking nested quotes.
+- INC-003 cleanup also needs elevation, so a plain guestcontrol teardown could not remove the task.
+
+**How I solved them**
+- Got the one unavoidable elevation from a human: opened an elevated PowerShell in the VM once and ran
+  the staged script; everything else (file drops, read-only forensic queries) stayed on guestcontrol.
+- Stopped using inline `-Command`/`-lc` strings for anything with quotes — wrote the logic to a small
+  `.ps1`/`.sh` in the scratchpad and ran it with `-File` / `bash -s < file`, which sidesteps shell
+  interpolation entirely.
+- Eradicated INC-003 without elevation by restoring the pre-scenario snapshot (`09-before-INC-003`);
+  verified task, payload folder and marker were all gone afterward.
+
+**Security concepts learned**
+- Token elevation type is forensic gold: `%%1937` (Full) vs `%%1938` (Limited) told the successful,
+  elevated install apart from the earlier failed non-elevated attempts in the same timeline.
+- Detect persistence on creation, not execution — the alert fires the moment the task is planted, well
+  before the next logon would run the payload.
+- A monitoring agent emits telemetry identical to the activity it hunts; recognising the agent's own
+  inventory behaviour is what avoids chasing a false positive.
+
+**Next step**
+- Phase 6 (detection tuning): generate benign activity against each rule, record false positives and
+  tune (e.g. parent-process allowlisting for 100120/100140). Optionally finish the deferred Wazuh
+  default-password rotation.
+
 ### 2026-10-23: Sigma rules, Phase 4 complete
 
 **Phase:** 4
