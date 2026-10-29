@@ -103,6 +103,8 @@ Replay of the 100141 logic over all **330** Security 4688 events currently in th
 
 Expected in real environments: admin troubleshooting sessions, inventory and IT-management scripts that enumerate local groups. Tune with an allowlist on user or parent process.
 
+**Tuned 2026-10-28 (Phase 6):** the Wazuh agent's own inventory runs `net user` as the computer account and fired rule 100140 twice per cycle (see [INC-002](../investigations/INC-002/README.md)). Rule 100140 now negates the parent process `wazuh-agent.exe`, so the agent's self-inventory is excluded while discovery from any other process — including a genuine SYSTEM-context attacker — still alerts. See Tuning Notes below.
+
 ## Known Gaps
 
 - **The `cmd.exe /c ...` wrapper counts too.** When several commands are chained in one `cmd /c` line, that parent line matches as well. Three matches can therefore come from two real commands plus the wrapper.
@@ -130,3 +132,4 @@ Expected in real environments: admin troubleshooting sessions, inventory and IT-
 | Date | Change | Reason | FP before → after |
 |---|---|---|---|
 | 2026-10-22 | Initial version | — | — |
+| 2026-10-28 | Rule 100140: exclude parent `wazuh-agent.exe` (negated `win.eventdata.parentProcessName`) | The Wazuh agent enumerates local users during its own inventory, running `net user` as the computer account (`DESKTOP-3UDQ08I$`, S-1-5-18). Reproduced live on 2026-10-28: two 100140 (level 3) per cycle. Documented as a benign FP in [INC-002](../investigations/INC-002/README.md). | 2 agent FPs per inventory cycle → 0 (parent excluded). Attacker-context discovery still fires: `labuser net user` re-tested live after deploy and alerted. Deploy validated with `wazuh-analysisd -t`. |
