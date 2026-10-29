@@ -69,6 +69,11 @@
   <rule id="100140" level="3">
     <if_sid>67027</if_sid>
     <field name="win.eventdata.commandLine" type="pcre2">(?i)(\bnet\s+(user|localgroup|group|accounts)\b|\bcmdkey(\.exe)?\s+/list|\bquser\b|\bquery\s+user\b|\bwhoami\b.*\s/(all|groups|priv))</field>
+    <!-- Phase 6 tuning (2026-10-28): the Wazuh agent enumerates local users as part of its own
+         inventory, running `net user` as the computer account (parent wazuh-agent.exe). That is the
+         false positive documented in INC-002. Exclude only that parent, so genuine SYSTEM-context
+         discovery from any other process still alerts (an allowlist, not a blanket SYSTEM exclusion). -->
+    <field name="win.eventdata.parentProcessName" negate="yes" type="pcre2">(?i)\\wazuh-agent\.exe$</field>
     <description>Account discovery command by $(win.eventdata.subjectUserName): $(win.eventdata.commandLine)</description>
     <mitre>
       <id>T1087.001</id>
