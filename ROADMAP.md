@@ -103,16 +103,20 @@ Sigma equivalents for all six rules were added on 2026-10-23 and validated with 
 
 ---
 
-## Phase 6: Detection Tuning · Planned
+## Phase 6: Detection Tuning · **In Progress**
 
 ```
 Initial Rule → False Positives → Tuning → Improved Detection
 ```
 
-- [ ] Generate normal, benign activity against each rule
-- [ ] Record the false positives
+- [x] Generate normal, benign activity against each rule
+- [x] Record the false positives
 - [ ] Tune each rule (exclusions, tighter conditions, correlation)
 - [ ] Document the before and after in each detection's Tuning Notes
+
+| Rule | False positive observed | Tuning | Status |
+|---|---|---|---|
+| [100140](detections/account-discovery-burst.md) | Wazuh agent's own inventory runs `net user` as the computer account (2 alerts/cycle); see [INC-002](investigations/INC-002/README.md) | Negate parent process `wazuh-agent.exe` | Tuned 2026-10-28 (attacker-context discovery still fires, verified live) |
 
 ---
 
